@@ -24,5 +24,8 @@ node tools/build-preview.mjs   # dist/preview.html 생성
 - [x] PRD, 구역 맵 v0 (187개 항목)
 - [x] 색 엔진 + 테스트
 - [ ] 실측 → 구역 맵 v1
-- [ ] 확장 뼈대 (manifest, 콘텐츠 스크립트, 어댑터, 팝업)
-- [ ] 추천 테마 24개
+- [x] 확장 뼈대 (manifest, 콘텐츠 스크립트, 어댑터 v0, 팝업)
+- [x] 추천 테마 24개 시드
+- [ ] 어댑터 CSS 실측 보정 → 원래 색 잔존 0개
+
+자세한 진행 방법은 [HANDOFF.md](HANDOFF.md).

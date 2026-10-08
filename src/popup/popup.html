@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>I Look</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="top">
+    <h1 class="wordmark">I Look</h1>
+    <p class="site" id="site-label">연결된 탭 없음</p>
+    <label class="switch" title="켜기 / 끄기">
+      <input type="checkbox" id="enabled" />
+      <span class="track"><span class="knob"></span></span>
+    </label>
+  </header>
+
+  <section id="view-browse" class="view">
+    <div class="filters" role="tablist" aria-label="테마 밝기">
+      <button class="chip is-on" data-filter="all" role="tab" aria-selected="true">전체</button>
+      <button class="chip" data-filter="light" role="tab" aria-selected="false">라이트</button>
+      <button class="chip" data-filter="dark" role="tab" aria-selected="false">다크</button>
+    </div>
+
+    <div class="grid" id="preset-grid" aria-label="추천 테마"></div>
+
+    <div class="mine">
+      <div class="mine-head">
+        <h2>내 테마</h2>
+        <button class="ghost" id="new-custom">새로 만들기</button>
+      </div>
+      <div class="grid" id="custom-grid"></div>
+      <p class="empty" id="custom-empty">아직 없어요. 추천 테마를 고른 뒤 색을 바꿔 보세요.</p>
+    </div>
+  </section>
+
+  <section id="view-edit" class="view" hidden>
+    <div class="edit-head">
+      <button class="ghost" id="back">← 목록</button>
+      <input id="theme-name" class="name" maxlength="24" placeholder="테마 이름" />
+    </div>
+
+    <div class="mini big" id="edit-preview"></div>
+
+    <div class="seeds">
+      <label class="seed">
+        <span>배경</span>
+        <input type="color" id="seed-bg" />
+        <input type="text" id="seed-bg-hex" class="hex" maxlength="7" spellcheck="false" />
+      </label>
+      <label class="seed">
+        <span>포인트</span>
+        <input type="color" id="seed-accent" />
+        <input type="text" id="seed-accent-hex" class="hex" maxlength="7" spellcheck="false" />
+      </label>
+      <label class="seed">
+        <span>사이드바</span>
+        <input type="color" id="seed-sidebar" />
+        <input type="text" id="seed-sidebar-hex" class="hex" maxlength="7" spellcheck="false" placeholder="자동" />
+        <button class="ghost tiny" id="sidebar-auto" title="배경에서 자동 계산">자동</button>
+      </label>
+    </div>
+
+    <ul class="notes" id="notes"></ul>
+
+    <div class="edit-actions">
+      <button class="ghost" id="dice" title="조화로운 조합을 무작위로">🎲 랜덤</button>
+      <span class="spacer"></span>
+      <button class="ghost danger" id="delete-custom" hidden>삭제</button>
+      <button class="primary" id="save-custom">저장</button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>글자색은 배경에서 자동으로 계산돼요</span>
+    <a href="#" id="about">색상 출처</a>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

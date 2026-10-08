@@ -4,6 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "build": "node tools/build-ext.mjs",
+    "preview": "node tools/build-preview.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }

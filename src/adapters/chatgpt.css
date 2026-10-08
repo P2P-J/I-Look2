@@ -1,0 +1,103 @@
+/* ILOOK adapter · chatgpt.com · v0
+   실측 전 초안. 변수 이름은 공개 사용자 스타일(userstyles.world)과 경쟁 확장 설명에서 관측된 것.
+   ChatGPT는 html에 .dark 클래스로 모드를 바꾸므로 두 모드 모두 이기게 셀렉터를 겹쳐 쓴다.
+   실측(M1) 후 사라진 변수 제거, 새 변수 추가, Tailwind 임의값(bg-[#303030] 등) 셀렉터 보강. */
+
+html[data-ilook],
+html[data-ilook].dark,
+html[data-ilook].light,
+html[data-ilook] body,
+html[data-ilook].dark body {
+  --main-surface-primary: var(--ilook-bg-app) !important;
+  --main-surface-secondary: var(--ilook-bg-surface) !important;
+  --main-surface-tertiary: var(--ilook-bg-elevated) !important;
+  --sidebar-surface-primary: var(--ilook-bg-sidebar) !important;
+  --sidebar-surface-secondary: var(--ilook-sidebar-hover) !important;
+  --sidebar-surface-tertiary: var(--ilook-sidebar-active) !important;
+  --message-surface: var(--ilook-bg-user-msg) !important;
+  --composer-surface: var(--ilook-bg-surface) !important;
+  --composer-surface-primary: var(--ilook-bg-surface) !important;
+
+  --text-primary: var(--ilook-text-primary) !important;
+  --text-secondary: var(--ilook-text-secondary) !important;
+  --text-tertiary: var(--ilook-text-muted) !important;
+  --text-quaternary: var(--ilook-text-muted) !important;
+  --text-accent: var(--ilook-accent) !important;
+  --text-error: var(--ilook-danger) !important;
+  --link: var(--ilook-text-link) !important;
+  --link-hover: var(--ilook-text-link) !important;
+
+  --border-light: var(--ilook-border-subtle) !important;
+  --border-medium: var(--ilook-border-subtle) !important;
+  --border-heavy: var(--ilook-border-strong) !important;
+  --border-xheavy: var(--ilook-border-strong) !important;
+
+  --gray-50: var(--ilook-bg-elevated) !important;
+  --gray-100: var(--ilook-bg-surface) !important;
+  --gray-200: var(--ilook-bg-hover) !important;
+  --gray-300: var(--ilook-border-subtle) !important;
+  --gray-400: var(--ilook-border-strong) !important;
+  --gray-500: var(--ilook-text-muted) !important;
+  --gray-600: var(--ilook-text-secondary) !important;
+  --gray-700: var(--ilook-bg-surface) !important;
+  --gray-750: var(--ilook-bg-surface) !important;
+  --gray-800: var(--ilook-bg-sidebar) !important;
+  --gray-900: var(--ilook-bg-app) !important;
+  --gray-950: var(--ilook-bg-app) !important;
+
+  background-color: var(--ilook-bg-app) !important;
+  color: var(--ilook-text-primary) !important;
+  caret-color: var(--ilook-accent);
+  accent-color: var(--ilook-accent);
+  scrollbar-color: var(--ilook-border-strong) var(--ilook-bg-app);
+}
+
+html[data-ilook] body,
+html[data-ilook] main {
+  background-color: var(--ilook-bg-app) !important;
+  color: var(--ilook-text-primary) !important;
+}
+
+html[data-ilook] nav,
+html[data-ilook] aside {
+  background-color: var(--ilook-bg-sidebar) !important;
+  color: var(--ilook-sidebar-text) !important;
+}
+
+html[data-ilook] [data-message-author-role='user'] > div > div {
+  background-color: var(--ilook-bg-user-msg) !important;
+  color: var(--ilook-text-on-user-msg) !important;
+}
+
+html[data-ilook] ::selection {
+  background-color: var(--ilook-accent-soft) !important;
+  color: var(--ilook-text-primary) !important;
+}
+
+html[data-ilook] :focus-visible {
+  outline-color: var(--ilook-focus-ring) !important;
+}
+
+html[data-ilook] pre,
+html[data-ilook] pre > div,
+html[data-ilook] pre code {
+  background-color: var(--ilook-bg-code) !important;
+}
+
+html[data-ilook] :not(pre) > code {
+  background-color: var(--ilook-bg-inline-code) !important;
+}
+
+html[data-ilook] [role='tooltip'] {
+  background-color: var(--ilook-tooltip) !important;
+  color: var(--ilook-bg-app) !important;
+}
+
+html[data-ilook] [role='menu'],
+html[data-ilook] [role='dialog'],
+html[data-ilook] [data-radix-popper-content-wrapper] > * {
+  background-color: var(--ilook-bg-elevated) !important;
+  color: var(--ilook-text-primary) !important;
+}
+
+/* 실측 후 채울 자리: Tailwind 임의값 클래스(.bg-\[\#303030\] 등), 페이드 그라데이션, 전송 버튼 */
