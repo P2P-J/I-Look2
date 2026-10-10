@@ -5,9 +5,12 @@ export const CACHE_KEY = 'ilook:css';
 export const STYLE_ID = 'ilook-tokens';
 export const ROOT_ATTR = 'data-ilook';
 
-export function detectSite(hostname = location.hostname, pathname = location.pathname) {
+// sandbox srcdoc 프레임은 hostname이 비어 있으므로 baseURI(부모 주소)로 판별한다
+export function detectSite(hostname = location.hostname || new URL(document.baseURI).hostname, pathname = location.pathname) {
   if (hostname === 'chatgpt.com' || hostname.endsWith('.chatgpt.com')) return 'chatgpt';
   if (hostname === 'claude.ai' || hostname.endsWith('.claude.ai')) return pathname.startsWith('/code') ? 'claude-code' : 'claude';
+  // 문서(아티팩트) 본문은 claude.ai 안의 별도 도메인 iframe에 들어 있다
+  if (hostname.endsWith('.claudeusercontent.com')) return 'claude';
   return null;
 }
 

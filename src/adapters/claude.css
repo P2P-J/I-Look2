@@ -41,6 +41,8 @@ html[data-ilook] .cds-root {
   --cds-text-muted: var(--ilook-text-muted) !important;
   --cds-text-disabled: var(--ilook-text-muted) !important;
   --cds-text-accent: var(--ilook-text-link) !important;
+  --cds-shortcut-cap-ink: var(--ilook-text-muted) !important;   /* 단축키 표시 ⌘K */
+  --cds-shortcut-cap-line: var(--ilook-border-strong) !important;
 
   /* 선 */
   --cds-border: var(--ilook-border-subtle) !important;
@@ -132,6 +134,135 @@ html[data-ilook][data-mode='light'] {
 html[data-ilook] body {
   background-color: var(--ilook-bg-app) !important;
   color: var(--ilook-text-primary) !important;
+}
+
+/* 사이드바 구역: 사이트는 사이드바에도 본문과 같은 --cds-text-*를 쓰고, 배경은 surface-0과 surface-1을 섞는다.
+   사이드바 전용 토큰(sidebar-*)이 정확히 그 배경 위에서 계산되므로 배경과 글자를 모두 바꿔 끼운다. */
+html[data-ilook] .dframe-sidebar {
+  --df-web-sidebar-bg: var(--ilook-bg-sidebar) !important;
+  --df-sidebar-bg: var(--ilook-bg-sidebar) !important;
+  --df-hover: var(--ilook-sidebar-hover) !important;
+  --df-selected: var(--ilook-sidebar-active) !important;
+  --cds-fill-ghost-hover: var(--ilook-sidebar-hover) !important;
+  --cds-fill-ghost-selected: var(--ilook-sidebar-active) !important;
+  --cds-text-primary: var(--ilook-sidebar-text) !important;
+  --cds-text-secondary: var(--ilook-sidebar-text) !important;
+  --cds-text-muted: var(--ilook-sidebar-text-muted) !important;
+  --cds-text-accent: var(--ilook-sidebar-accent) !important;
+  --cds-shortcut-cap-ink: var(--ilook-sidebar-text-muted) !important;
+  --cds-border: var(--ilook-sidebar-border) !important;
+}
+
+/* 중첩 .cds-root / [data-mode] 범위가 color-scheme을 다시 정해 canvas·canvastext 같은 시스템 색이 뒤집히는 것을 막는다 */
+html[data-ilook='light'] .cds-root,
+html[data-ilook='light'] [data-mode] {
+  color-scheme: light !important;
+}
+
+html[data-ilook='dark'] .cds-root,
+html[data-ilook='dark'] [data-mode] {
+  color-scheme: dark !important;
+}
+
+/* 문서(아티팩트) 패널 iframe: claude.ai/code/artifact/… 는 별도 문서라 자체 변수를 쓴다 (html[data-embedded]) */
+html[data-ilook][data-embedded],
+html[data-ilook][data-embedded][data-mode='dark'] {
+  --bg: var(--ilook-bg-app) !important;        /* #fff / #1a1a19 */
+  --page: var(--ilook-bg-app) !important;      /* #fcfcfb / #151515 */
+  --surf: var(--ilook-bg-surface) !important;  /* #fff / #20201f */
+  --fg: var(--ilook-text-primary) !important;  /* #0b0b0b / #f0efec */
+  --mut: var(--ilook-text-secondary) !important; /* #52514e / #c3c2b7 */
+  --spin: var(--ilook-text-muted) !important;
+  --line: var(--ilook-border-subtle) !important;
+  --div: var(--ilook-border-subtle) !important;
+  --bord: var(--ilook-border-strong) !important;
+  --hov: var(--ilook-bg-hover) !important;
+  --sec: var(--ilook-bg-hover) !important;
+  --sec-hov: var(--ilook-bg-active) !important;
+  --sec-ring: var(--ilook-border-subtle) !important;
+  --picto: var(--ilook-bg-active) !important;
+  --primary: var(--ilook-text-primary) !important;
+  --primary-hov: var(--ilook-text-secondary) !important;
+  --on-primary: var(--ilook-bg-app) !important;
+  --brand: var(--ilook-accent) !important;
+}
+
+/* 문서 본문 편집기 (claudeusercontent.com 안의 srcdoc iframe, html[data-lfile-frame]) */
+html[data-ilook][data-lfile-frame] {
+  --ink: var(--ilook-text-primary) !important;
+  --cut-rule: var(--ilook-border-subtle) !important;
+}
+
+html[data-ilook][data-lfile-frame] .ProseMirror a {
+  color: var(--ilook-text-link) !important; /* 사이트는 팔레트(--cds-blue-500)를 직접 쓴다 */
+}
+
+/* 코드 블록: 사이트 하이라이트 색은 모드와 무관한 하드코딩 rgb(One Dark)라 토큰으로 바꾼다 */
+html[data-ilook] .code-block__code,
+html[data-ilook] .code-block__code code, /* code에 인라인 color가 박혀 있다 */
+html[data-ilook] .hljs {
+  color: var(--ilook-text-primary) !important;
+}
+
+html[data-ilook] .hljs-comment,
+html[data-ilook] .hljs-quote {
+  color: var(--ilook-syntax-comment) !important;
+}
+
+html[data-ilook] .hljs-keyword,
+html[data-ilook] .hljs-doctag,
+html[data-ilook] .hljs-formula,
+html[data-ilook] .hljs-meta,
+html[data-ilook] .hljs-selector-tag,
+html[data-ilook] .hljs-section,
+html[data-ilook] .hljs-name {
+  color: var(--ilook-syntax-keyword) !important;
+}
+
+html[data-ilook] .hljs-string,
+html[data-ilook] .hljs-regexp,
+html[data-ilook] .hljs-addition,
+html[data-ilook] .hljs-meta .hljs-string {
+  color: var(--ilook-syntax-string) !important;
+}
+
+html[data-ilook] .hljs-number,
+html[data-ilook] .hljs-literal,
+html[data-ilook] .hljs-symbol,
+html[data-ilook] .hljs-bullet,
+html[data-ilook] .hljs-link,
+html[data-ilook] .hljs-selector-id,
+html[data-ilook] .hljs-deletion {
+  color: var(--ilook-syntax-number) !important;
+}
+
+html[data-ilook] .hljs-title,
+html[data-ilook] .hljs-title.function_,
+html[data-ilook] .hljs-function {
+  color: var(--ilook-syntax-function) !important;
+}
+
+html[data-ilook] .hljs-attr,
+html[data-ilook] .hljs-attribute,
+html[data-ilook] .hljs-variable,
+html[data-ilook] .hljs-template-variable,
+html[data-ilook] .hljs-property,
+html[data-ilook] .hljs-selector-attr,
+html[data-ilook] .hljs-selector-class,
+html[data-ilook] .hljs-selector-pseudo {
+  color: var(--ilook-syntax-property) !important;
+}
+
+html[data-ilook] .hljs-built_in,
+html[data-ilook] .hljs-type,
+html[data-ilook] .hljs-class .hljs-title,
+html[data-ilook] .hljs-title.class_ {
+  color: var(--ilook-syntax-type) !important;
+}
+
+html[data-ilook] .hljs-punctuation,
+html[data-ilook] .hljs-operator {
+  color: var(--ilook-syntax-punctuation) !important;
 }
 
 html[data-ilook] ::selection {
