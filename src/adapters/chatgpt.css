@@ -41,6 +41,8 @@ html[data-ilook] [data-chat-theme] {
   --composer-surface: var(--ilook-bg-surface) !important;
   --composer-surface-primary: var(--ilook-bg-surface) !important;
   --message-surface: var(--ilook-bg-user-msg) !important;
+  --code-block-surface: var(--ilook-bg-code) !important;
+  --tw-prose-inline-code-bg: var(--ilook-bg-inline-code) !important;
 
   /* 사이드바 */
   --component-sidebar-bg: var(--ilook-bg-sidebar) !important;    /* #fcfcfc / #000 */
@@ -135,9 +137,95 @@ html[data-ilook] [data-chat-theme] {
   scrollbar-color: var(--ilook-border-strong) var(--ilook-bg-app);
 }
 
+/* 다크 모드에서는 `html.dark :not(:where(.light, .light *))` 규칙이 모든 요소에 --main-surface-primary를 검정으로
+   다시 선언한다 (입력창 아래 페이드, 상단 반투명 바). 그래서 이 변수 하나는 모든 요소에서 덮는다. */
+html[data-ilook] * {
+  --main-surface-primary: var(--ilook-bg-app) !important;
+}
+
 /* 메뉴 항목은 .__menu-item에서 자체 변수를 선언한다 */
 html[data-ilook] .__menu-item {
   --menu-item-active: var(--ilook-bg-active) !important;
+}
+
+/* 하드코딩 색만 쓰는 출처 칩·토글 (토큰이 없어 클래스로 덮는다).
+   사이트 규칙이 @layer 안의 !important라 background-color로는 못 이기므로 그 위에 그리는 background-image를 쓴다. */
+html[data-ilook] [class*='bg-[#F4F4F4]'],
+html[data-ilook] [class*='bg-[#303030]'],
+html[data-ilook] [class*='bg-[#131313]'] {
+  background-image: linear-gradient(var(--ilook-bg-hover), var(--ilook-bg-hover)) !important;
+}
+
+html[data-ilook] [class*='text-[#8F8F8F]'] {
+  color: var(--ilook-text-muted) !important;
+}
+
+/* 코드 블록: 하이라이트 색이 .light/.dark 범위별 하드코딩 rgb라 토큰으로 바꾼다 */
+html[data-ilook] code[class*='language-'],
+html[data-ilook] pre[class*='language-'],
+html[data-ilook] code.hljs {
+  color: var(--ilook-text-primary) !important;
+}
+
+html[data-ilook] .hljs-comment,
+html[data-ilook] .hljs-quote {
+  color: var(--ilook-syntax-comment) !important;
+}
+
+html[data-ilook] .hljs-keyword,
+html[data-ilook] .hljs-doctag,
+html[data-ilook] .hljs-formula,
+html[data-ilook] .hljs-meta,
+html[data-ilook] .hljs-selector-tag,
+html[data-ilook] .hljs-section,
+html[data-ilook] .hljs-name {
+  color: var(--ilook-syntax-keyword) !important;
+}
+
+html[data-ilook] .hljs-string,
+html[data-ilook] .hljs-regexp,
+html[data-ilook] .hljs-addition,
+html[data-ilook] .hljs-meta .hljs-string {
+  color: var(--ilook-syntax-string) !important;
+}
+
+html[data-ilook] .hljs-number,
+html[data-ilook] .hljs-literal,
+html[data-ilook] .hljs-symbol,
+html[data-ilook] .hljs-bullet,
+html[data-ilook] .hljs-link,
+html[data-ilook] .hljs-selector-id,
+html[data-ilook] .hljs-deletion {
+  color: var(--ilook-syntax-number) !important;
+}
+
+html[data-ilook] .hljs-title,
+html[data-ilook] .hljs-title.function_,
+html[data-ilook] .hljs-function {
+  color: var(--ilook-syntax-function) !important;
+}
+
+html[data-ilook] .hljs-attr,
+html[data-ilook] .hljs-attribute,
+html[data-ilook] .hljs-variable,
+html[data-ilook] .hljs-template-variable,
+html[data-ilook] .hljs-property,
+html[data-ilook] .hljs-selector-attr,
+html[data-ilook] .hljs-selector-class,
+html[data-ilook] .hljs-selector-pseudo {
+  color: var(--ilook-syntax-property) !important;
+}
+
+html[data-ilook] .hljs-built_in,
+html[data-ilook] .hljs-type,
+html[data-ilook] .hljs-class .hljs-title,
+html[data-ilook] .hljs-title.class_ {
+  color: var(--ilook-syntax-type) !important;
+}
+
+html[data-ilook] .hljs-punctuation,
+html[data-ilook] .hljs-operator {
+  color: var(--ilook-syntax-punctuation) !important;
 }
 
 html[data-ilook],
