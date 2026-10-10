@@ -1,11 +1,11 @@
-/* ILOOK adapter · chatgpt.com · v1
-   2026-10-10 실측 (로그아웃 홈, 다크·라이트). ChatGPT는 StyleX + lightningcss로 바뀌어
-   --main-surface-primary, --gray-* 같은 이름은 정의돼 있지 않다. 색은 :root에 선언된 해시 변수(--x…)가 칠한다.
-   해시는 StyleX가 소스의 변수 정의에서 만들므로 배포마다 바뀌지는 않지만, 디자인 시스템이 바뀌면 재실측해야 한다.
+/* ILOOK adapter · chatgpt.com · v2
+   2026-10-10 로그인 상태 실측 (대화 화면, 라이트·다크, data-chat-theme=blue).
+   로그인 앱은 Tailwind 토큰 변수(--text-primary, --bg-primary …)를 쓴다. 로그아웃 홈은 다른 번들(StyleX 해시 변수)이라 다루지 않는다.
+   사이트는 토큰을 `html, .light, .dark .light { … }`와 `.dark { … }`에 선언하고, 마크다운 본문 div 등 중간 요소에도
+   .light/.dark 클래스를 붙여 토큰 전체를 다시 선언한다. 그래서 html뿐 아니라 그 범위 요소마다 같이 덮어야 한다.
    주석의 값은 사이트 원래 값 (라이트 / 다크). */
 
-/* 사이트 모드 스위치를 테마 밝기에 맞춘다. 연결하지 못한 색도 글자·배경 방향이 뒤집히지 않게 하기 위함.
-   사이트 규칙은 @layer 안에 있어서 레이어 밖인 이 규칙이 이긴다. */
+/* 사이트 모드 스위치를 테마 밝기에 맞춘다 (일부 컴포넌트가 lightningcss 스위치를 쓴다). */
 html[data-ilook='light'] {
   --lightningcss-light: initial !important;
   --lightningcss-dark: !important;
@@ -18,85 +18,133 @@ html[data-ilook='dark'] {
   color-scheme: dark !important;
 }
 
-/* body에도 같은 테마 클래스가 붙어 변수를 다시 선언하므로 body까지 덮는다. */
 html[data-ilook],
-html[data-ilook] body {
-  /* 배경 */
-  --xxsqvjy: var(--ilook-bg-app) !important;        /* #fcfcfc / #000     main, aside */
-  --x17e9krr: var(--ilook-bg-surface) !important;   /* #fff / #212121     입력창 form, dialog */
-  --x1mzx15b: var(--ilook-bg-elevated) !important;  /* #fff / #303030 */
-  --x7fwydj: var(--ilook-bg-hover) !important;      /* #f3f3f3 / #303030  hover */
-  --x1h28xhg: var(--ilook-bg-hover) !important;     /* #f3f3f3 / #41414180 */
-  --x8cb1zg: var(--ilook-bg-active) !important;     /* #e8e8e8 / #414141a6 */
-  --x1w9ml1o: var(--ilook-bg-active) !important;    /* #e8e8e8 / #414141  선택된 항목 */
-  --x1em6fjx: var(--ilook-bg-active) !important;    /* #cdcdcd / #414141cc */
-  --xomnu2l: var(--ilook-overlay-dim) !important;   /* #00000080 */
+html[data-ilook] .light,
+html[data-ilook] .dark,
+html[data-ilook] .popover,
+html[data-ilook] [data-chat-theme] {
+  /* 면 */
+  --main-surface-primary: var(--ilook-bg-app) !important;        /* #fcfcfc / #000     페이지 */
+  --main-surface-secondary: var(--ilook-bg-surface) !important;  /* #f9f9f9 / #181818 */
+  --main-surface-tertiary: var(--ilook-bg-hover) !important;     /* #ececec / #2f2f2f */
+  --main-surface-primary-inverse: var(--ilook-tooltip) !important;
+  --bg-primary: var(--ilook-bg-surface) !important;              /* #fff / #212121     입력창, 카드 */
+  --bg-secondary: var(--ilook-bg-hover) !important;              /* #e8e8e8 / #303030 */
+  --bg-tertiary: var(--ilook-bg-active) !important;              /* #f3f3f3 / #414141 */
+  --bg-secondary-surface: var(--ilook-bg-surface) !important;    /* #f9f9f9 / #000 */
+  --bg-elevated-primary: var(--ilook-bg-elevated) !important;    /* #fff / #1b1b1b     메뉴, 팝오버 */
+  --bg-elevated-secondary: var(--ilook-bg-elevated) !important;  /* #f3f3f3 / #000 */
+  --bg-primary-inverted: var(--ilook-tooltip) !important;
+  --bg-tooltip: var(--ilook-tooltip) !important;                 /* #000 / #1b1b1b */
+  --border-tooltip: transparent !important;
+  --surface-hover: var(--ilook-bg-hover) !important;
+  --composer-surface: var(--ilook-bg-surface) !important;
+  --composer-surface-primary: var(--ilook-bg-surface) !important;
+  --message-surface: var(--ilook-bg-user-msg) !important;
 
-  /* 반전 면 (툴팁 등) */
-  --x1fwcpeh: var(--ilook-tooltip) !important;      /* #212121 / #e8e8e8 */
-  --x2vz5pf: var(--ilook-tooltip) !important;
-  --x1hqqq8t: var(--ilook-tooltip) !important;      /* #303030 / #cdcdcd */
-  --x1weeliy: var(--ilook-tooltip) !important;
+  /* 사이드바 */
+  --component-sidebar-bg: var(--ilook-bg-sidebar) !important;    /* #fcfcfc / #000 */
+  --sidebar-surface-primary: var(--ilook-bg-sidebar) !important;
+  --sidebar-surface-secondary: var(--ilook-sidebar-hover) !important;
+  --sidebar-surface-tertiary: var(--ilook-sidebar-active) !important;
 
   /* 글자 */
-  --x69dsh5: var(--ilook-text-primary) !important;  /* #0d0d0d / #fff  본문 글자, 기본 버튼 면 */
-  --xlyber6: var(--ilook-text-primary) !important;
-  --x1scdecw: var(--ilook-text-primary) !important;
-  --xj7rxqu: var(--ilook-bg-app) !important;        /* #fff / #0d0d0d  기본 버튼 위 글자 */
-  --xrh3fnw: var(--ilook-text-secondary) !important; /* #5d5d5d / #cdcdcd */
-  --x9rvtud: var(--ilook-text-secondary) !important;
-  --x17pqyd6: var(--ilook-text-muted) !important;   /* #8f8f8f / #afafaf */
-  --text-primary: var(--ilook-text-primary) !important; /* 대체값 체인에만 남은 이름 */
+  --text-primary: var(--ilook-text-primary) !important;          /* #0d0d0d / #fff */
+  --text-secondary: var(--ilook-text-secondary) !important;      /* #5d5d5d / #cdcdcd */
+  --text-tertiary: var(--ilook-text-muted) !important;           /* #8f8f8f / #afafaf */
+  --text-quaternary: var(--ilook-text-muted) !important;
+  --text-inverted: var(--ilook-bg-app) !important;               /* 반전 면 위 글자 */
+  --text-accent: var(--ilook-text-link) !important;
+  --text-error: var(--ilook-danger) !important;
+  --text-status-error: var(--ilook-danger) !important;
+  --text-status-warning: var(--ilook-warning) !important;
+  --text-status-success: var(--ilook-success) !important;
+  --link: var(--ilook-text-link) !important;
+  --link-hover: var(--ilook-accent-hover) !important;
+  --icon-primary: var(--ilook-text-primary) !important;
+  --icon-secondary: var(--ilook-text-secondary) !important;
+  --icon-tertiary: var(--ilook-text-muted) !important;
+  --icon-inverted: var(--ilook-bg-app) !important;
+  --icon-accent: var(--ilook-text-link) !important;
 
   /* 선 */
-  --x1vdwxib: var(--ilook-border-subtle) !important; /* #0000000d / #ffffff1a */
-  --x1bitlb: var(--ilook-border-subtle) !important;
-  --x1gatu3h: var(--ilook-border-subtle) !important;
-  --x17gks54: var(--ilook-border-subtle) !important; /* #0000001a / #ffffff26 */
-  --xiq9l3n: var(--ilook-border-strong) !important;  /* #0003 / #fff3 */
+  --border-default: var(--ilook-border-subtle) !important;       /* #0000001a / #ffffff26 */
+  --border-light: var(--ilook-border-subtle) !important;
+  --border-xlight: var(--ilook-border-subtle) !important;
+  --border-extra-light: var(--ilook-border-subtle) !important;
+  --border-sharp: var(--ilook-border-subtle) !important;
+  --border-medium: var(--ilook-border-subtle) !important;
+  --border-heavy: var(--ilook-border-strong) !important;
+  --border-xheavy: var(--ilook-border-strong) !important;
 
-  /* 포인트 */
-  --xif7uko: var(--ilook-accent) !important;        /* #3566f0  포커스 외곽선 */
-  --xivnm23: var(--ilook-text-link) !important;     /* #3566f0 / #81a6f9 */
-  --x1rz22zo: var(--ilook-text-link) !important;
-  --xnugslg: var(--ilook-text-link) !important;     /* #2451da / #b0c9fe */
-  --xz5y3vh: var(--ilook-text-link) !important;
-  --x1labttc: var(--ilook-accent-hover) !important; /* #2451da */
-  --x1cjgdn4: var(--ilook-accent-soft) !important;  /* #e4ecfe / #020562 */
+  /* 버튼·상호작용 (primary = 반전 버튼, secondary = 투명+hover, tertiary = 면 버튼) */
+  --interactive-bg-primary-default: var(--ilook-text-primary) !important;
+  --interactive-bg-primary-hover: var(--ilook-text-secondary) !important;
+  --interactive-bg-primary-selected: var(--ilook-text-primary) !important;
+  --interactive-bg-secondary-hover: var(--ilook-bg-hover) !important;
+  --interactive-bg-secondary-press: var(--ilook-bg-active) !important;
+  --interactive-bg-secondary-selected: var(--ilook-bg-active) !important;
+  --interactive-bg-tertiary-default: var(--ilook-bg-surface) !important;
+  --interactive-bg-tertiary-hover: var(--ilook-bg-hover) !important;
+  --interactive-bg-tertiary-press: var(--ilook-bg-active) !important;
+  --interactive-bg-accent-muted-hover: var(--ilook-accent-soft) !important;
+  --interactive-bg-accent-muted-press: var(--ilook-accent-soft) !important;
+  --interactive-bg-accent-muted-context: var(--ilook-accent-soft) !important;
+  --interactive-border-focus: var(--ilook-focus-ring) !important;
+  --interactive-border-secondary-default: var(--ilook-border-subtle) !important;
+  --interactive-border-secondary-hover: var(--ilook-border-strong) !important;
+  --interactive-border-secondary-press: var(--ilook-border-strong) !important;
+  --interactive-label-secondary-default: var(--ilook-text-primary) !important;
+  --interactive-label-secondary-hover: var(--ilook-text-primary) !important;
+  --interactive-label-secondary-press: var(--ilook-text-primary) !important;
+  --interactive-label-tertiary-default: var(--ilook-text-secondary) !important;
+  --interactive-label-accent-default: var(--ilook-text-link) !important;
+  --interactive-icon-tertiary-default: var(--ilook-text-secondary) !important;
 
-  /* 상태 */
-  --x701wd9: var(--ilook-danger) !important;        /* #ba2623 / #ff6764 */
-  --x1ub3vle: var(--ilook-danger) !important;
-  --x1o4h194: var(--ilook-danger) !important;       /* #ba2623 / #fa423e */
-  --x1a4yvy8: var(--ilook-diff-remove) !important;  /* #ffe1e0 / #4d100e */
-  --x1b9m67z: var(--ilook-success) !important;      /* #027c6a / #04bb9f */
-  --x17aac8x: var(--ilook-success) !important;
-  --xakxzc7: var(--ilook-diff-add) !important;      /* #cafdf0 / #032a23 */
-  --x131p452: var(--ilook-warning) !important;      /* #9f5c14 / #ffcc38 */
-  --x52cqm6: var(--ilook-warning) !important;
+  /* 포인트 (ChatGPT 설정의 채팅 테마색과 충돌하지 않게 전부 덮는다) */
+  --accent-blue: var(--ilook-accent) !important;
+  --bg-accent-static: var(--ilook-accent) !important;
+  --theme-blue-default: var(--ilook-accent) !important;
+  --theme-blue-text: var(--ilook-text-link) !important;
+  --theme-blue-text-on-background: var(--ilook-text-link) !important;
+  --theme-blue-background: var(--ilook-accent-soft) !important;
+  --theme-user-msg-bg: var(--ilook-bg-user-msg) !important;       /* 사용자 말풍선 */
+  --theme-user-msg-text: var(--ilook-text-on-user-msg) !important;
+  --theme-submit-btn-bg: var(--ilook-accent) !important;          /* 전송 버튼 */
+  --theme-submit-btn-text: var(--ilook-text-on-accent) !important;
+  --theme-secondary-btn-bg: var(--ilook-bg-hover) !important;
+  --theme-secondary-btn-text: var(--ilook-text-primary) !important;
+  --theme-entity-accent: var(--ilook-text-link) !important;
+  --theme-accent-text: var(--ilook-text-link) !important;
+  --theme-accent-pill-bg-rest: var(--ilook-accent-soft) !important;
+  --theme-accent-pill-bg-hover: var(--ilook-accent-soft) !important;
+  --theme-accent-pill-text-rest: var(--ilook-text-link) !important;
+  --theme-accent-pill-text-hover: var(--ilook-text-link) !important;
+  --theme-user-selection-bg: var(--ilook-accent-soft) !important;
 
-  background-color: var(--ilook-bg-app) !important;
-  color: var(--ilook-text-primary) !important;
+  /* 상태 면 */
+  --bg-status-error: var(--ilook-diff-remove) !important;
+  --bg-status-success: var(--ilook-diff-add) !important;
+  --bg-status-warning: var(--ilook-badge) !important;
+  --border-status-error: var(--ilook-danger) !important;
+  --border-status-warning: var(--ilook-warning) !important;
+  --interactive-border-danger-secondary-default: var(--ilook-danger) !important;
+
   caret-color: var(--ilook-accent);
   accent-color: var(--ilook-accent);
   scrollbar-color: var(--ilook-border-strong) var(--ilook-bg-app);
 }
 
+/* 메뉴 항목은 .__menu-item에서 자체 변수를 선언한다 */
+html[data-ilook] .__menu-item {
+  --menu-item-active: var(--ilook-bg-active) !important;
+}
+
+html[data-ilook],
 html[data-ilook] body,
 html[data-ilook] main {
   background-color: var(--ilook-bg-app) !important;
   color: var(--ilook-text-primary) !important;
-}
-
-html[data-ilook] nav,
-html[data-ilook] aside {
-  background-color: var(--ilook-bg-sidebar) !important;
-  color: var(--ilook-sidebar-text) !important;
-}
-
-html[data-ilook] [data-message-author-role='user'] > div > div {
-  background-color: var(--ilook-bg-user-msg) !important;
-  color: var(--ilook-text-on-user-msg) !important;
 }
 
 html[data-ilook] ::selection {
