@@ -153,6 +153,13 @@ html[data-ilook] .dframe-sidebar {
   --cds-border: var(--ilook-sidebar-border) !important;
 }
 
+/* 문서 패널 제목 등은 팔레트 끝값(text-gray-900/80, dark:text-gray-0/70)을 직접 써서 사이트 모드를 따라간다.
+   토큰이 없어 클래스로 덮는다. */
+html[data-ilook] [class*='text-gray-900/'],
+html[data-ilook] [class*='text-gray-0/'] {
+  color: var(--ilook-text-primary) !important;
+}
+
 /* 중첩 .cds-root / [data-mode] 범위가 color-scheme을 다시 정해 canvas·canvastext 같은 시스템 색이 뒤집히는 것을 막는다 */
 html[data-ilook='light'] .cds-root,
 html[data-ilook='light'] [data-mode] {
