@@ -11,7 +11,7 @@ chrome.webNavigation.onCommitted.addListener(async (d) => {
   if (!parent || !/\.claudeusercontent\.com$/.test(new URL(parent.url).hostname)) return;
   const target = { tabId: d.tabId, frameIds: [d.frameId] };
   try {
-    await chrome.scripting.insertCSS({ target, files: ['adapters/claude.css'] });
+    await chrome.scripting.insertCSS({ target, files: ['adapters/claude.css', 'adapters/syntax.css'] });
     await chrome.scripting.executeScript({ target, files: ['content.js'] });
   } catch (e) {
     console.warn('[ilook] srcdoc inject failed', e.message);

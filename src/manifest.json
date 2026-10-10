@@ -15,20 +15,20 @@
     {
       "matches": ["https://chatgpt.com/*"],
       "js": ["content.js"],
-      "css": ["adapters/chatgpt.css"],
+      "css": ["adapters/chatgpt.css", "adapters/syntax.css"],
       "run_at": "document_start"
     },
     {
       "matches": ["https://claude.ai/*"],
       "js": ["content.js"],
-      "css": ["adapters/claude.css"],
+      "css": ["adapters/claude.css", "adapters/syntax.css"],
       "run_at": "document_start",
       "all_frames": true
     },
     {
       "matches": ["https://*.claudeusercontent.com/*"],
       "js": ["content.js"],
-      "css": ["adapters/claude.css"],
+      "css": ["adapters/claude.css", "adapters/syntax.css"],
       "run_at": "document_start",
       "all_frames": true,
       "match_about_blank": true,

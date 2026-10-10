@@ -166,68 +166,6 @@ html[data-ilook] pre[class*='language-'],
 html[data-ilook] code.hljs {
   color: var(--ilook-text-primary) !important;
 }
-
-html[data-ilook] .hljs-comment,
-html[data-ilook] .hljs-quote {
-  color: var(--ilook-syntax-comment) !important;
-}
-
-html[data-ilook] .hljs-keyword,
-html[data-ilook] .hljs-doctag,
-html[data-ilook] .hljs-formula,
-html[data-ilook] .hljs-meta,
-html[data-ilook] .hljs-selector-tag,
-html[data-ilook] .hljs-section,
-html[data-ilook] .hljs-name {
-  color: var(--ilook-syntax-keyword) !important;
-}
-
-html[data-ilook] .hljs-string,
-html[data-ilook] .hljs-regexp,
-html[data-ilook] .hljs-addition,
-html[data-ilook] .hljs-meta .hljs-string {
-  color: var(--ilook-syntax-string) !important;
-}
-
-html[data-ilook] .hljs-number,
-html[data-ilook] .hljs-literal,
-html[data-ilook] .hljs-symbol,
-html[data-ilook] .hljs-bullet,
-html[data-ilook] .hljs-link,
-html[data-ilook] .hljs-selector-id,
-html[data-ilook] .hljs-deletion {
-  color: var(--ilook-syntax-number) !important;
-}
-
-html[data-ilook] .hljs-title,
-html[data-ilook] .hljs-title.function_,
-html[data-ilook] .hljs-function {
-  color: var(--ilook-syntax-function) !important;
-}
-
-html[data-ilook] .hljs-attr,
-html[data-ilook] .hljs-attribute,
-html[data-ilook] .hljs-variable,
-html[data-ilook] .hljs-template-variable,
-html[data-ilook] .hljs-property,
-html[data-ilook] .hljs-selector-attr,
-html[data-ilook] .hljs-selector-class,
-html[data-ilook] .hljs-selector-pseudo {
-  color: var(--ilook-syntax-property) !important;
-}
-
-html[data-ilook] .hljs-built_in,
-html[data-ilook] .hljs-type,
-html[data-ilook] .hljs-class .hljs-title,
-html[data-ilook] .hljs-title.class_ {
-  color: var(--ilook-syntax-type) !important;
-}
-
-html[data-ilook] .hljs-punctuation,
-html[data-ilook] .hljs-operator {
-  color: var(--ilook-syntax-punctuation) !important;
-}
-
 html[data-ilook],
 html[data-ilook] body,
 html[data-ilook] main {
