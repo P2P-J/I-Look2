@@ -34,6 +34,12 @@ export function buildCss(seeds) {
   return { css: tokensToCss(result.tokens, result.isLight), result };
 }
 
+// 어댑터가 html[data-ilook='light'|'dark']로 사이트 자체 모드 스위치를 테마 밝기에 맞춘다.
+export function schemeOf(css) {
+  const m = css.match(/--ilook-scheme: (light|dark);/);
+  return m ? m[1] : '';
+}
+
 export function injectCss(css) {
   const root = document.documentElement;
   let el = document.getElementById(STYLE_ID);
@@ -43,7 +49,7 @@ export function injectCss(css) {
     (document.head || root).appendChild(el);
   }
   if (el.textContent !== css) el.textContent = css;
-  root.setAttribute(ROOT_ATTR, '');
+  root.setAttribute(ROOT_ATTR, schemeOf(css));
 }
 
 export function removeCss() {
