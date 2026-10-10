@@ -1,49 +1,79 @@
-/* ILOOK adapter · chatgpt.com · v0
-   실측 전 초안. 변수 이름은 공개 사용자 스타일(userstyles.world)과 경쟁 확장 설명에서 관측된 것.
-   ChatGPT는 html에 .dark 클래스로 모드를 바꾸므로 두 모드 모두 이기게 셀렉터를 겹쳐 쓴다.
-   실측(M1) 후 사라진 변수 제거, 새 변수 추가, Tailwind 임의값(bg-[#303030] 등) 셀렉터 보강. */
+/* ILOOK adapter · chatgpt.com · v1
+   2026-10-10 실측 (로그아웃 홈, 다크·라이트). ChatGPT는 StyleX + lightningcss로 바뀌어
+   --main-surface-primary, --gray-* 같은 이름은 정의돼 있지 않다. 색은 :root에 선언된 해시 변수(--x…)가 칠한다.
+   해시는 StyleX가 소스의 변수 정의에서 만들므로 배포마다 바뀌지는 않지만, 디자인 시스템이 바뀌면 재실측해야 한다.
+   주석의 값은 사이트 원래 값 (라이트 / 다크). */
 
+/* 사이트 모드 스위치를 테마 밝기에 맞춘다. 연결하지 못한 색도 글자·배경 방향이 뒤집히지 않게 하기 위함.
+   사이트 규칙은 @layer 안에 있어서 레이어 밖인 이 규칙이 이긴다. */
+html[data-ilook='light'] {
+  --lightningcss-light: initial !important;
+  --lightningcss-dark: !important;
+  color-scheme: light !important;
+}
+
+html[data-ilook='dark'] {
+  --lightningcss-light: !important;
+  --lightningcss-dark: initial !important;
+  color-scheme: dark !important;
+}
+
+/* body에도 같은 테마 클래스가 붙어 변수를 다시 선언하므로 body까지 덮는다. */
 html[data-ilook],
-html[data-ilook].dark,
-html[data-ilook].light,
-html[data-ilook] body,
-html[data-ilook].dark body {
-  --main-surface-primary: var(--ilook-bg-app) !important;
-  --main-surface-secondary: var(--ilook-bg-surface) !important;
-  --main-surface-tertiary: var(--ilook-bg-elevated) !important;
-  --sidebar-surface-primary: var(--ilook-bg-sidebar) !important;
-  --sidebar-surface-secondary: var(--ilook-sidebar-hover) !important;
-  --sidebar-surface-tertiary: var(--ilook-sidebar-active) !important;
-  --message-surface: var(--ilook-bg-user-msg) !important;
-  --composer-surface: var(--ilook-bg-surface) !important;
-  --composer-surface-primary: var(--ilook-bg-surface) !important;
+html[data-ilook] body {
+  /* 배경 */
+  --xxsqvjy: var(--ilook-bg-app) !important;        /* #fcfcfc / #000     main, aside */
+  --x17e9krr: var(--ilook-bg-surface) !important;   /* #fff / #212121     입력창 form, dialog */
+  --x1mzx15b: var(--ilook-bg-elevated) !important;  /* #fff / #303030 */
+  --x7fwydj: var(--ilook-bg-hover) !important;      /* #f3f3f3 / #303030  hover */
+  --x1h28xhg: var(--ilook-bg-hover) !important;     /* #f3f3f3 / #41414180 */
+  --x8cb1zg: var(--ilook-bg-active) !important;     /* #e8e8e8 / #414141a6 */
+  --x1w9ml1o: var(--ilook-bg-active) !important;    /* #e8e8e8 / #414141  선택된 항목 */
+  --x1em6fjx: var(--ilook-bg-active) !important;    /* #cdcdcd / #414141cc */
+  --xomnu2l: var(--ilook-overlay-dim) !important;   /* #00000080 */
 
-  --text-primary: var(--ilook-text-primary) !important;
-  --text-secondary: var(--ilook-text-secondary) !important;
-  --text-tertiary: var(--ilook-text-muted) !important;
-  --text-quaternary: var(--ilook-text-muted) !important;
-  --text-accent: var(--ilook-accent) !important;
-  --text-error: var(--ilook-danger) !important;
-  --link: var(--ilook-text-link) !important;
-  --link-hover: var(--ilook-text-link) !important;
+  /* 반전 면 (툴팁 등) */
+  --x1fwcpeh: var(--ilook-tooltip) !important;      /* #212121 / #e8e8e8 */
+  --x2vz5pf: var(--ilook-tooltip) !important;
+  --x1hqqq8t: var(--ilook-tooltip) !important;      /* #303030 / #cdcdcd */
+  --x1weeliy: var(--ilook-tooltip) !important;
 
-  --border-light: var(--ilook-border-subtle) !important;
-  --border-medium: var(--ilook-border-subtle) !important;
-  --border-heavy: var(--ilook-border-strong) !important;
-  --border-xheavy: var(--ilook-border-strong) !important;
+  /* 글자 */
+  --x69dsh5: var(--ilook-text-primary) !important;  /* #0d0d0d / #fff  본문 글자, 기본 버튼 면 */
+  --xlyber6: var(--ilook-text-primary) !important;
+  --x1scdecw: var(--ilook-text-primary) !important;
+  --xj7rxqu: var(--ilook-bg-app) !important;        /* #fff / #0d0d0d  기본 버튼 위 글자 */
+  --xrh3fnw: var(--ilook-text-secondary) !important; /* #5d5d5d / #cdcdcd */
+  --x9rvtud: var(--ilook-text-secondary) !important;
+  --x17pqyd6: var(--ilook-text-muted) !important;   /* #8f8f8f / #afafaf */
+  --text-primary: var(--ilook-text-primary) !important; /* 대체값 체인에만 남은 이름 */
 
-  --gray-50: var(--ilook-bg-elevated) !important;
-  --gray-100: var(--ilook-bg-surface) !important;
-  --gray-200: var(--ilook-bg-hover) !important;
-  --gray-300: var(--ilook-border-subtle) !important;
-  --gray-400: var(--ilook-border-strong) !important;
-  --gray-500: var(--ilook-text-muted) !important;
-  --gray-600: var(--ilook-text-secondary) !important;
-  --gray-700: var(--ilook-bg-surface) !important;
-  --gray-750: var(--ilook-bg-surface) !important;
-  --gray-800: var(--ilook-bg-sidebar) !important;
-  --gray-900: var(--ilook-bg-app) !important;
-  --gray-950: var(--ilook-bg-app) !important;
+  /* 선 */
+  --x1vdwxib: var(--ilook-border-subtle) !important; /* #0000000d / #ffffff1a */
+  --x1bitlb: var(--ilook-border-subtle) !important;
+  --x1gatu3h: var(--ilook-border-subtle) !important;
+  --x17gks54: var(--ilook-border-subtle) !important; /* #0000001a / #ffffff26 */
+  --xiq9l3n: var(--ilook-border-strong) !important;  /* #0003 / #fff3 */
+
+  /* 포인트 */
+  --xif7uko: var(--ilook-accent) !important;        /* #3566f0  포커스 외곽선 */
+  --xivnm23: var(--ilook-text-link) !important;     /* #3566f0 / #81a6f9 */
+  --x1rz22zo: var(--ilook-text-link) !important;
+  --xnugslg: var(--ilook-text-link) !important;     /* #2451da / #b0c9fe */
+  --xz5y3vh: var(--ilook-text-link) !important;
+  --x1labttc: var(--ilook-accent-hover) !important; /* #2451da */
+  --x1cjgdn4: var(--ilook-accent-soft) !important;  /* #e4ecfe / #020562 */
+
+  /* 상태 */
+  --x701wd9: var(--ilook-danger) !important;        /* #ba2623 / #ff6764 */
+  --x1ub3vle: var(--ilook-danger) !important;
+  --x1o4h194: var(--ilook-danger) !important;       /* #ba2623 / #fa423e */
+  --x1a4yvy8: var(--ilook-diff-remove) !important;  /* #ffe1e0 / #4d100e */
+  --x1b9m67z: var(--ilook-success) !important;      /* #027c6a / #04bb9f */
+  --x17aac8x: var(--ilook-success) !important;
+  --xakxzc7: var(--ilook-diff-add) !important;      /* #cafdf0 / #032a23 */
+  --x131p452: var(--ilook-warning) !important;      /* #9f5c14 / #ffcc38 */
+  --x52cqm6: var(--ilook-warning) !important;
 
   background-color: var(--ilook-bg-app) !important;
   color: var(--ilook-text-primary) !important;
@@ -99,5 +129,3 @@ html[data-ilook] [data-radix-popper-content-wrapper] > * {
   background-color: var(--ilook-bg-elevated) !important;
   color: var(--ilook-text-primary) !important;
 }
-
-/* 실측 후 채울 자리: Tailwind 임의값 클래스(.bg-\[\#303030\] 등), 페이드 그라데이션, 전송 버튼 */

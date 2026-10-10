@@ -1,14 +1,86 @@
-/* ILOOK adapter · claude.ai (채팅 + Claude Code 웹) · v0
-   실측 전 초안. 변수 이름은 공개 자료(인쇄 스크립트 gist, platform.claude.com CSS)에서 관측된 것.
-   Claude 변수는 "H S% L%" 세 성분 형식이라 --ilook-*-hsl 토큰을 연결한다.
-   실측(M1) 후 사라진 변수 제거, 새 변수 추가, 하드코딩 셀렉터 보강. */
+/* ILOOK adapter · claude.ai (채팅 + Claude Code 웹) · v1
+   2026-10-10 실측 (로그인 화면, data-color-version="v2"). 화면은 새 CDS 변수(--cds-*, hex 값)가 칠한다.
+   body 자체가 .bg-surface-1 .text-primary → var(--cds-surface-1), var(--cds-text-primary).
+   CDS 변수는 .cds-root(html)와 .cds-root[data-mode="dark"]에 선언되므로 !important로 덮는다.
+   옛 변수(--bg-*, --text-* 등, "H S% L%" 형식)는 아직 정의돼 있어 -hsl 토큰으로 남겨 둔다. */
+
+html[data-ilook],
+html[data-ilook] .cds-root {
+  /* 면: surface-0(가장 깊은 면) < 1(페이지) < 2(패널) < 3(팝오버) */
+  --cds-page-bg: var(--ilook-bg-app) !important;
+  --cds-surface-0: var(--ilook-bg-sidebar) !important;
+  --cds-surface-1: var(--ilook-bg-app) !important;
+  --cds-surface-2: var(--ilook-bg-surface) !important;
+  --cds-surface-3: var(--ilook-bg-elevated) !important;
+  --cds-surface-panel: var(--ilook-bg-surface) !important;
+  --cds-surface-popover: var(--ilook-bg-elevated) !important;
+  --cds-bg-user-message: var(--ilook-bg-user-msg) !important;
+  --cds-backdrop: var(--ilook-overlay-dim) !important;
+  --cds-tooltip-bg: var(--ilook-tooltip) !important;
+  --cds-skeleton-base: var(--ilook-skeleton) !important;
+
+  /* 모드 상대 회색 단계 (0=종이 쪽, 900=잉크 쪽). 컴포넌트가 직접 쓰는 단계만 연결. 30은 사이드바 nav 배경 */
+  --cds-neutral-0: var(--ilook-bg-elevated) !important;
+  --cds-neutral-10: var(--ilook-bg-app) !important;
+  --cds-neutral-20: var(--ilook-bg-sidebar) !important;
+  --cds-neutral-30: var(--ilook-bg-sidebar) !important;
+  --cds-neutral-40: var(--ilook-bg-hover) !important;
+  --cds-neutral-50: var(--ilook-bg-hover) !important;
+  --cds-neutral-60: var(--ilook-bg-active) !important;
+  --cds-neutral-70: var(--ilook-bg-active) !important;
+  --cds-neutral-150: var(--ilook-border-strong) !important;
+  --cds-neutral-400: var(--ilook-text-muted) !important;
+  --cds-neutral-600: var(--ilook-text-secondary) !important;
+  --cds-neutral-700: var(--ilook-text-secondary) !important;
+  --cds-neutral-750: var(--ilook-text-secondary) !important;
+  --cds-neutral-900: var(--ilook-text-primary) !important;
+
+  /* 글자 */
+  --cds-text-primary: var(--ilook-text-primary) !important;
+  --cds-text-secondary: var(--ilook-text-secondary) !important;
+  --cds-text-muted: var(--ilook-text-muted) !important;
+  --cds-text-disabled: var(--ilook-text-muted) !important;
+  --cds-text-accent: var(--ilook-text-link) !important;
+
+  /* 선 */
+  --cds-border: var(--ilook-border-subtle) !important;
+  --cds-border-strong: var(--ilook-border-strong) !important;
+  --cds-border-stronger: var(--ilook-border-strong) !important;
+  --cds-border-accent: var(--ilook-accent) !important;
+
+  /* 채움 (버튼, 입력칸, hover) */
+  --cds-fill-ghost-hover: var(--ilook-bg-hover) !important;
+  --cds-fill-ghost-selected: var(--ilook-bg-active) !important;
+  --cds-fill-secondary: var(--ilook-bg-hover) !important;
+  --cds-fill-secondary-hover: var(--ilook-bg-active) !important;
+  --cds-fill-field: var(--ilook-bg-surface) !important;
+  --cds-fill-primary: var(--ilook-text-primary) !important;
+  --cds-fill-primary-hover: var(--ilook-text-secondary) !important;
+  --cds-on-primary: var(--ilook-bg-app) !important;
+
+  /* 포인트 */
+  --cds-fill-accent: var(--ilook-accent) !important;
+  --cds-fill-accent-hover: var(--ilook-accent-hover) !important;
+  --cds-on-accent: var(--ilook-text-on-accent) !important;
+  --cds-bg-accent: var(--ilook-accent-soft) !important;
+  --cds-fill-brand: var(--ilook-accent) !important;
+  --cds-fill-brand-hover: var(--ilook-accent-hover) !important;
+  --cds-on-brand: var(--ilook-text-on-accent) !important;
+
+  /* 상태 */
+  --cds-text-danger: var(--ilook-danger) !important;
+  --cds-fill-danger: var(--ilook-danger) !important;
+  --cds-bg-danger: var(--ilook-diff-remove) !important;
+  --cds-text-success: var(--ilook-success) !important;
+  --cds-fill-success: var(--ilook-success) !important;
+  --cds-bg-success: var(--ilook-diff-add) !important;
+  --cds-text-warning: var(--ilook-warning) !important;
+}
 
 html[data-ilook],
 html[data-ilook][data-mode='dark'],
-html[data-ilook][data-mode='light'],
-html[data-ilook].dark,
-html[data-ilook].light {
-  /* 배경 단계 */
+html[data-ilook][data-mode='light'] {
+  /* 옛 변수: 배경 단계 */
   --bg-000: var(--ilook-bg-elevated-hsl) !important;
   --bg-100: var(--ilook-bg-app-hsl) !important;
   --bg-200: var(--ilook-bg-sidebar-hsl) !important;
@@ -16,7 +88,7 @@ html[data-ilook].light {
   --bg-400: var(--ilook-bg-hover-hsl) !important;
   --bg-500: var(--ilook-bg-active-hsl) !important;
 
-  /* 글자 단계 */
+  /* 옛 변수: 글자 단계 */
   --text-000: var(--ilook-text-heading-hsl) !important;
   --text-100: var(--ilook-text-primary-hsl) !important;
   --text-200: var(--ilook-text-primary-hsl) !important;
@@ -24,15 +96,12 @@ html[data-ilook].light {
   --text-400: var(--ilook-text-muted-hsl) !important;
   --text-500: var(--ilook-text-muted-hsl) !important;
 
-  /* 포인트 */
-  --accent-main-000: var(--ilook-accent-hover-hsl) !important;
-  --accent-main-100: var(--ilook-accent-hsl) !important;
-  --accent-main-200: var(--ilook-accent-hsl) !important;
-  --accent-main-900: var(--ilook-accent-soft-hsl) !important;
-  --accent-secondary-000: var(--ilook-text-link-hsl) !important;
-  --accent-secondary-100: var(--ilook-text-link-hsl) !important;
-  --accent-secondary-200: var(--ilook-text-link-hsl) !important;
-  --accent-secondary-900: var(--ilook-accent-soft-hsl) !important;
+  /* 옛 변수: 포인트 */
+  --accent-000: var(--ilook-accent-hover-hsl) !important;
+  --accent-100: var(--ilook-accent-hsl) !important;
+  --accent-200: var(--ilook-accent-hsl) !important;
+  --accent-900: var(--ilook-accent-soft-hsl) !important;
+  --accent-brand: var(--ilook-accent-hsl) !important;
   --accent-pro-000: var(--ilook-accent-hsl) !important;
   --accent-pro-100: var(--ilook-accent-hsl) !important;
   --accent-pro-200: var(--ilook-accent-hsl) !important;
@@ -41,35 +110,17 @@ html[data-ilook].light {
   --oncolor-200: var(--ilook-text-on-accent-hsl) !important;
   --oncolor-300: var(--ilook-text-on-accent-hsl) !important;
 
-  /* 선 */
+  /* 옛 변수: 선 */
   --border-100: var(--ilook-border-strong-hsl) !important;
   --border-200: var(--ilook-border-strong-hsl) !important;
   --border-300: var(--ilook-border-subtle-hsl) !important;
   --border-400: var(--ilook-border-subtle-hsl) !important;
 
-  /* 상태 */
+  /* 옛 변수: 상태 */
   --danger-000: var(--ilook-danger-hsl) !important;
   --danger-100: var(--ilook-danger-hsl) !important;
   --danger-200: var(--ilook-danger-hsl) !important;
   --danger-900: var(--ilook-diff-remove-hsl) !important;
-
-  /* 브랜드 색 (kraft, book-cloth, manilla) — 포인트 계열로 */
-  --kraft: var(--ilook-accent-soft-hsl) !important;
-  --book-cloth: var(--ilook-accent-hsl) !important;
-  --manilla: var(--ilook-bg-user-msg-hsl) !important;
-
-  /* 신택스 (문서 사이트에서 관측, claude.ai 적용 여부 확인 필요) */
-  --hljs-comment: var(--ilook-syntax-comment) !important;
-  --hljs-keyword: var(--ilook-syntax-keyword) !important;
-  --hljs-string: var(--ilook-syntax-string) !important;
-  --hljs-number: var(--ilook-syntax-number) !important;
-  --hljs-function: var(--ilook-syntax-function) !important;
-  --hljs-variable: var(--ilook-syntax-property) !important;
-  --hljs-class: var(--ilook-syntax-type) !important;
-  --hljs-attr: var(--ilook-syntax-property) !important;
-  --hljs-built-in: var(--ilook-syntax-type) !important;
-  --hljs-tag: var(--ilook-syntax-keyword) !important;
-  --hljs-literal: var(--ilook-syntax-number) !important;
 
   background-color: var(--ilook-bg-app) !important;
   color: var(--ilook-text-primary) !important;
@@ -109,5 +160,3 @@ html[data-ilook] [role='tooltip'] {
   background-color: var(--ilook-tooltip) !important;
   color: var(--ilook-bg-app) !important;
 }
-
-/* 실측 후 채울 자리: 하드코딩 색 셀렉터 (페이드 그라데이션, 사용자 말풍선, 입력창 등) */
