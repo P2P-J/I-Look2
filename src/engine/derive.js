@@ -114,14 +114,19 @@ function syntaxPalette(accentHex, bgCode, textMutedOnCode) {
 export function deriveSidebar(sidebarBg, accentHex) {
   const light = isLight(sidebarBg);
   const text = textOn(sidebarBg, CONTRAST.body.target, CONTRAST.body.min);
-  const muted = targetContrast(mix(sidebarBg, text, 0.55), sidebarBg, CONTRAST.muted.target, CONTRAST.muted.min, { direction: light ? 'darker' : 'lighter' });
+  const hover = raise(sidebarBg, text, 0.07, LAYER.hover, light);
+  const active = raise(sidebarBg, text, 0.12, LAYER.active, light);
+  // 흐린 글자와 포인트는 선택된 항목(active) 위에서도 보여야 한다
+  const muted = ensureContrast(
+    targetContrast(mix(sidebarBg, text, 0.55), sidebarBg, CONTRAST.muted.target, CONTRAST.muted.min, { direction: light ? 'darker' : 'lighter' }),
+    active, CONTRAST.muted.min, { direction: light ? 'darker' : 'lighter' });
   return {
     'sidebar-text': text,
     'sidebar-text-muted': muted,
-    'sidebar-hover': raise(sidebarBg, text, 0.07, LAYER.hover, light),
-    'sidebar-active': raise(sidebarBg, text, 0.12, LAYER.active, light),
+    'sidebar-hover': hover,
+    'sidebar-active': active,
     'sidebar-border': raise(sidebarBg, text, 0.14, LAYER.borderSubtle, light),
-    'sidebar-accent': targetContrast(accentHex, sidebarBg, 3, 3),
+    'sidebar-accent': ensureContrast(targetContrast(accentHex, sidebarBg, 3, 3), active, 3, { direction: light ? 'darker' : 'lighter' }),
   };
 }
 
@@ -138,8 +143,8 @@ export function derive(seeds) {
 
   const textPrimary = textOn(bg, CONTRAST.body.target, CONTRAST.body.min);
   const textHeading = ensureContrast(shiftL(textPrimary, light ? -0.08 : 0.05), bg, CONTRAST.body.min);
-  const textSecondary = targetContrast(mix(bg, textPrimary, 0.72), bg, CONTRAST.secondary.target, CONTRAST.secondary.min, { direction: light ? 'darker' : 'lighter' });
-  const textMuted = targetContrast(mix(bg, textPrimary, 0.5), bg, CONTRAST.muted.target, CONTRAST.muted.min, { direction: light ? 'darker' : 'lighter' });
+  let textSecondary = targetContrast(mix(bg, textPrimary, 0.72), bg, CONTRAST.secondary.target, CONTRAST.secondary.min, { direction: light ? 'darker' : 'lighter' });
+  let textMuted = targetContrast(mix(bg, textPrimary, 0.5), bg, CONTRAST.muted.target, CONTRAST.muted.min, { direction: light ? 'darker' : 'lighter' });
 
   let accent = seeds.accent;
   if (contrastHex(accent, bg) < 3) {
@@ -166,7 +171,7 @@ export function derive(seeds) {
   }
   const accentHover = shiftL(accent, isLight(accent) ? -0.06 : 0.06);
   const accentSoft = mix(bg, seeds.accent, 0.2);
-  const textLink = targetContrast(seeds.accent, bg, 4.5, 4.5);
+  let textLink = targetContrast(seeds.accent, bg, 4.5, 4.5);
 
   const sidebarBg = seeds.sidebar ? normalizeBackground(seeds.sidebar).hex : autoSidebar(bg, light);
   const sidebar = deriveSidebar(sidebarBg, accent);
@@ -177,6 +182,22 @@ export function derive(seeds) {
   const textOnUserMsg = textOn(bgUserMsg, CONTRAST.body.target, CONTRAST.body.min);
   const bgCode = distinct(light ? mix(shiftL(bg, -0.03), textPrimary, 0.04) : mix(shiftL(bg, 0.03), textPrimary, 0.04), bg, LAYER.code, light ? 'darker' : 'lighter');
   const bgInlineCode = raise(bg, textPrimary, 0.08, LAYER.inlineCode, light);
+  const bgHover = raise(bg, textPrimary, 0.06, LAYER.hover, light);
+  const bgActive = raise(bg, textPrimary, 0.1, LAYER.active, light);
+
+  // 글자는 bg-app 말고도 입력창(surface)·메뉴(elevated)·말풍선·코드 면 위에 놓인다.
+  // 그중 대비가 가장 낮은 면을 기준으로 한 번 더 보장한다.
+  const surfaces = [bg, bgSurface, bgElevated, bgUserMsg, bgCode, bgInlineCode, bgHover, bgActive];
+  const onAllSurfaces = (fg, min) => {
+    const worst = surfaces.reduce((a, b) => (contrastHex(fg, b) < contrastHex(fg, a) ? b : a));
+    const fixed = ensureContrast(fg, worst, min, { direction: light ? 'darker' : 'lighter' });
+    // 중간 회색 배경처럼 목표에 닿을 수 없으면 ensureContrast가 방향을 뒤집는다. 그땐 원래 색을 둔다.
+    const dL = hexToOklch(fixed).L - hexToOklch(fg).L;
+    return (light ? dL <= 0 : dL >= 0) ? fixed : fg;
+  };
+  textSecondary = onAllSurfaces(textSecondary, CONTRAST.secondary.min);
+  textMuted = onAllSurfaces(textMuted, CONTRAST.muted.min);
+  textLink = onAllSurfaces(textLink, 4.5);
 
   const borderSubtle = raise(bg, textPrimary, 0.12, LAYER.borderSubtle, light);
   const borderStrong = raise(bg, textPrimary, 0.25, LAYER.borderStrong, light);
@@ -193,8 +214,8 @@ export function derive(seeds) {
     'bg-user-msg': bgUserMsg,
     'bg-code': bgCode,
     'bg-inline-code': bgInlineCode,
-    'bg-hover': raise(bg, textPrimary, 0.06, LAYER.hover, light),
-    'bg-active': raise(bg, textPrimary, 0.1, LAYER.active, light),
+    'bg-hover': bgHover,
+    'bg-active': bgActive,
     'overlay-dim': alpha('#000000', light ? 0.4 : 0.6),
     'text-primary': textPrimary,
     'text-heading': textHeading,
