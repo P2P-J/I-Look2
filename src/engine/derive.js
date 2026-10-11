@@ -56,9 +56,9 @@ export function normalizeBackground(hex) {
   const midHigh = 0.66;
   if (L > midLow && L < midHigh) {
     L = L - midLow < midHigh - L ? midLow : midHigh;
-    notes.push('글자가 잘 보이도록 배경 밝기를 조정했어요');
+    notes.push('bg-adjusted');
   }
-  if (lch.C > 0.2) notes.push('채도가 높은 배경은 오래 보면 눈이 피로할 수 있어요');
+  if (lch.C > 0.2) notes.push('bg-saturated');
   return { hex: oklchToHex({ L, C: lch.C, H: lch.H }), notes };
 }
 
@@ -149,7 +149,7 @@ export function derive(seeds) {
   let accent = seeds.accent;
   if (contrastHex(accent, bg) < 3) {
     accent = ensureContrast(accent, bg, 3);
-    notes.push('포인트색이 배경과 비슷해 밝기를 조정했어요');
+    notes.push('accent-adjusted');
   }
   let textOnAccent = bestOf(['#ffffff', '#111111'], accent);
   if (contrastHex(textOnAccent, accent) < 4.5) {
@@ -167,7 +167,7 @@ export function derive(seeds) {
       accent = darkOk ? darkened : lightened;
       textOnAccent = bestOf(['#ffffff', '#111111'], accent);
     }
-    if (Math.abs(hexToOklch(accent).L - hexToOklch(seeds.accent).L) > 0.04) notes.push('버튼 글자가 잘 보이도록 포인트색 밝기를 조정했어요');
+    if (Math.abs(hexToOklch(accent).L - hexToOklch(seeds.accent).L) > 0.04) notes.push('accent-text-adjusted');
   }
   const accentHover = shiftL(accent, isLight(accent) ? -0.06 : 0.06);
   const accentSoft = mix(bg, seeds.accent, 0.2);

@@ -90,12 +90,12 @@ for (const [name, seeds] of EXTREME_SEEDS) {
 
 test('중간 회색은 보정 안내가 뜬다', () => {
   const { notes } = derive({ bg: '#767676', accent: '#2e7cd1' });
-  assert.ok(notes.some((n) => n.includes('배경 밝기')));
+  assert.ok(notes.includes('bg-adjusted'));
 });
 
 test('포인트=배경이면 포인트색 보정 안내가 뜬다', () => {
   const { notes } = derive({ bg: '#e9f3f7', accent: '#e9f3f7' });
-  assert.ok(notes.some((n) => n.includes('포인트색')));
+  assert.ok(notes.includes('accent-adjusted'));
 });
 
 test('사이드바 미지정이면 자동 파생', () => {
