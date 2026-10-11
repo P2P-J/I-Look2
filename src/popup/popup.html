@@ -7,74 +7,106 @@
 </head>
 <body>
   <header class="top">
-    <h1 class="wordmark">I Look</h1>
-    <p class="site" id="site-label">연결된 탭 없음</p>
-    <label class="switch" title="켜기 / 끄기">
+    <img class="logo" src="icons/48.png" alt="" width="22" height="22" />
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab" data-site="claude" role="tab">Claude</button>
+      <button type="button" class="tab" data-site="chatgpt" role="tab">ChatGPT</button>
+    </div>
+    <label class="switch" data-i18n-title="popup_enabled_title">
       <input type="checkbox" id="enabled" />
       <span class="track"><span class="knob"></span></span>
     </label>
+    <button type="button" class="icon" id="open-settings" data-i18n-title="popup_settings_title" aria-label="Settings">⚙</button>
   </header>
 
-  <section id="view-browse" class="view">
-    <div class="filters" role="tablist" aria-label="테마 밝기">
-      <button class="chip is-on" data-filter="all" role="tab" aria-selected="true">전체</button>
-      <button class="chip" data-filter="light" role="tab" aria-selected="false">라이트</button>
-      <button class="chip" data-filter="dark" role="tab" aria-selected="false">다크</button>
-    </div>
-
-    <div class="grid" id="preset-grid" aria-label="추천 테마"></div>
-
-    <div class="mine">
-      <div class="mine-head">
-        <h2>내 테마</h2>
-        <button class="ghost" id="new-custom">새로 만들기</button>
+  <section id="view-list" class="view">
+    <div class="now">
+      <div class="now-mini" id="now-mini"></div>
+      <div class="now-text">
+        <b id="now-name"></b>
+        <small id="now-sub"></small>
       </div>
-      <div class="grid" id="custom-grid"></div>
-      <p class="empty" id="custom-empty">아직 없어요. 추천 테마를 고른 뒤 색을 바꿔 보세요.</p>
+      <button type="button" class="btn" id="change-colors" data-i18n="popup_change_colors"></button>
     </div>
+    <div class="chips" role="tablist">
+      <button type="button" class="chip is-on" data-filter="all" data-i18n="popup_filter_all"></button>
+      <button type="button" class="chip" data-filter="light" data-i18n="popup_filter_light"></button>
+      <button type="button" class="chip" data-filter="dark" data-i18n="popup_filter_dark"></button>
+      <button type="button" class="chip" data-filter="mine" data-i18n="popup_filter_mine"></button>
+    </div>
+    <div class="scroll">
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="mine-empty" hidden data-i18n="popup_mine_empty"></p>
+    </div>
+    <footer class="foot">
+      <span id="foot-hint"></span>
+      <button type="button" class="btn primary" id="new-theme" data-i18n="popup_new_theme"></button>
+    </footer>
   </section>
 
   <section id="view-edit" class="view" hidden>
-    <div class="edit-head">
-      <button class="ghost" id="back">← 목록</button>
-      <input id="theme-name" class="name" maxlength="24" placeholder="테마 이름" />
+    <div class="subhead">
+      <button type="button" class="btn ghost" id="back-edit" data-i18n="popup_back"></button>
+      <h2 data-i18n="popup_editor_title"></h2>
     </div>
-
-    <div class="mini big" id="edit-preview"></div>
-
-    <div class="seeds">
-      <label class="seed">
-        <span>배경</span>
-        <input type="color" id="seed-bg" />
-        <input type="text" id="seed-bg-hex" class="hex" maxlength="7" spellcheck="false" />
-      </label>
-      <label class="seed">
-        <span>포인트</span>
-        <input type="color" id="seed-accent" />
-        <input type="text" id="seed-accent-hex" class="hex" maxlength="7" spellcheck="false" />
-      </label>
-      <label class="seed">
-        <span>사이드바</span>
-        <input type="color" id="seed-sidebar" />
-        <input type="text" id="seed-sidebar-hex" class="hex" maxlength="7" spellcheck="false" placeholder="자동" />
-        <button class="ghost tiny" id="sidebar-auto" title="배경에서 자동 계산">자동</button>
-      </label>
+    <div class="scroll pad">
+      <input id="theme-name" class="name" maxlength="24" data-i18n-placeholder="popup_theme_name_placeholder" />
+      <div id="edit-preview"></div>
+      <div class="seeds">
+        <label class="seed">
+          <span data-i18n="popup_seed_bg"></span>
+          <input type="color" id="seed-bg" />
+          <input type="text" id="seed-bg-hex" class="hex" maxlength="7" spellcheck="false" />
+        </label>
+        <label class="seed">
+          <span data-i18n="popup_seed_accent"></span>
+          <input type="color" id="seed-accent" />
+          <input type="text" id="seed-accent-hex" class="hex" maxlength="7" spellcheck="false" />
+        </label>
+        <label class="seed">
+          <span data-i18n="popup_seed_sidebar"></span>
+          <input type="color" id="seed-sidebar" />
+          <input type="text" id="seed-sidebar-hex" class="hex" maxlength="7" spellcheck="false" />
+        </label>
+        <label class="auto"><input type="checkbox" id="sidebar-auto" /> <span data-i18n="popup_sidebar_auto"></span></label>
+      </div>
+      <p class="hint" data-i18n="popup_editor_hint"></p>
+      <ul class="notes" id="notes"></ul>
+      <div class="actions">
+        <button type="button" class="btn ghost" id="dice" data-i18n="popup_random"></button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost danger" id="delete-custom" hidden data-i18n="popup_delete"></button>
+        <button type="button" class="btn primary" id="save-custom" data-i18n="popup_save"></button>
+      </div>
     </div>
-
-    <ul class="notes" id="notes"></ul>
-
-    <div class="edit-actions">
-      <button class="ghost" id="dice" title="조화로운 조합을 무작위로">🎲 랜덤</button>
-      <span class="spacer"></span>
-      <button class="ghost danger" id="delete-custom" hidden>삭제</button>
-      <button class="primary" id="save-custom">저장</button>
-    </div>
+    <footer class="foot"><span id="preview-hint"></span></footer>
   </section>
 
-  <footer class="foot">
-    <span>글자색은 배경에서 자동으로 계산돼요</span>
-    <a href="#" id="about">색상 출처</a>
-  </footer>
+  <section id="view-settings" class="view" hidden>
+    <div class="subhead">
+      <button type="button" class="btn ghost" id="back-settings" data-i18n="popup_back"></button>
+      <h2 data-i18n="popup_settings"></h2>
+    </div>
+    <div class="scroll pad">
+      <div class="item">
+        <div><span data-i18n="popup_lang"></span><small>Language</small></div>
+        <div class="seg" role="radiogroup">
+          <button type="button" data-lang="auto" data-i18n="popup_lang_auto"></button>
+          <button type="button" data-lang="ko">한국어</button>
+          <button type="button" data-lang="en">English</button>
+        </div>
+      </div>
+      <div class="item">
+        <div><span data-i18n="popup_same_theme"></span><small id="same-theme-sub"></small></div>
+        <button type="button" class="btn" id="same-theme-apply" data-i18n="popup_apply"></button>
+      </div>
+      <a class="item link" href="#" id="sources">
+        <div><span data-i18n="popup_sources"></span><small data-i18n="popup_sources_sub"></small></div>
+        <span>›</span>
+      </a>
+      <p class="version" id="version"></p>
+    </div>
+  </section>
 
   <script type="module" src="popup.js"></script>
 </body>
