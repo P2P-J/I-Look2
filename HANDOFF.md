@@ -9,7 +9,7 @@ Claude 채팅에서 만든 것과 VSCode + Claude Code에서 이어서 할 일.
 | 색 엔진 (시드 3색 → 토큰 48개, 대비 보장) | 완성, 테스트 27개 통과 | `src/engine/` |
 | 추천 테마 24개 시드 | 완성 (Radix 값은 npm 패키지에서 추출) | `src/themes/presets.js` |
 | 콘텐츠 스크립트 (localStorage 캐시, storage 동기화, 미리보기 메시지) | 완성, 실기기 미검증 | `src/content/` |
-| 팝업 UI (목록, 커스텀 편집, 랜덤, ON/OFF) | 완성, headless 렌더 확인 | `src/popup/` |
+| 팝업 UI (사이트 탭, 현재 상태, 목록·편집·설정, 언어 ko/en) | 완성, 디버그 크롬 스크린샷 확인 | `src/popup/` (`popup.js` 상태 / `views.js` 렌더 / `i18n.js` 문자열) |
 | 사이트 어댑터 CSS | **v0 초안. 실측 전** | `src/adapters/` |
 | 실측 스크립트 | 완성 | `measure/` |
 | 빌드 | esbuild, `npm run build` → `dist/extension` | `tools/build-ext.mjs` |
@@ -58,7 +58,7 @@ PRD의 구역 맵 상세 탭(Z0~Z13, 187개 항목)이 어떤 요소에 어떤 �
 1. 어댑터 보정 (위)
 2. 실기기에서 번쩍임 0회 확인, 캐시 삭제 후 복구 확인
 3. Claude Code 웹(claude.ai/code) 전용 구역 Z13 셀렉터
-4. 팝업: 사이트별 테마 토글, 테마 내보내기·가져오기
+4. 팝업: 테마 내보내기·가져오기 (설정 화면에 한 줄 추가)
 5. 아이콘 교체 (지금은 자리표시용)
 6. 출시 전 상표 검토 (Notion 등 이름 사용)
 
