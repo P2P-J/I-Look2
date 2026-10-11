@@ -1,34 +1,52 @@
 import { DEFAULT_PRESET_ID, findPreset } from './themes/presets.js';
 
+export const SITES = ['chatgpt', 'claude'];
+export const LANGS = ['auto', 'ko', 'en'];
+
 export const DEFAULT_SETTINGS = {
   enabled: true,
-  activeTheme: { chatgpt: DEFAULT_PRESET_ID, claude: DEFAULT_PRESET_ID, 'claude-code': DEFAULT_PRESET_ID },
-  perSite: false,
+  activeTheme: { chatgpt: DEFAULT_PRESET_ID, claude: DEFAULT_PRESET_ID },
   customThemes: [],
+  lang: 'auto',
+  lastSite: 'claude',
 };
 
+// Claude Code 웹(claude.ai/code)은 Claude 테마를 따른다
+export function siteKey(site) {
+  return site === 'chatgpt' ? 'chatgpt' : 'claude';
+}
+
 export function resolveSeeds(settings, site) {
-  const key = settings.perSite ? site : 'claude';
-  const id = settings.activeTheme?.[key] || settings.activeTheme?.claude || DEFAULT_PRESET_ID;
+  const id = settings.activeTheme?.[siteKey(site)] || DEFAULT_PRESET_ID;
   const custom = (settings.customThemes || []).find((t) => t.id === id);
-  if (custom) return { id, name: custom.name, seeds: custom.seeds };
+  if (custom) return { id, name: custom.name, seeds: custom.seeds, custom: true };
   const preset = findPreset(id) || findPreset(DEFAULT_PRESET_ID);
-  return { id: preset.id, name: preset.name, seeds: preset.seeds };
+  return { id: preset.id, name: preset.name, seeds: preset.seeds, custom: false };
 }
 
 export function withDefaults(raw) {
+  raw = raw || {};
+  const at = { ...(raw.activeTheme || {}) };
+  // 옛 저장값: 사이트별 스위치(perSite)가 꺼져 있었으면 공통 테마(claude 키)를 양쪽에 둔다
+  if (raw.perSite === false && at.claude) at.chatgpt = at.claude;
   return {
-    ...DEFAULT_SETTINGS,
-    ...(raw || {}),
-    activeTheme: { ...DEFAULT_SETTINGS.activeTheme, ...((raw && raw.activeTheme) || {}) },
-    customThemes: Array.isArray(raw?.customThemes) ? raw.customThemes : [],
+    enabled: raw.enabled === undefined ? true : !!raw.enabled,
+    activeTheme: { chatgpt: at.chatgpt || DEFAULT_PRESET_ID, claude: at.claude || DEFAULT_PRESET_ID },
+    customThemes: Array.isArray(raw.customThemes) ? raw.customThemes : [],
+    lang: LANGS.includes(raw.lang) ? raw.lang : 'auto',
+    lastSite: SITES.includes(raw.lastSite) ? raw.lastSite : 'claude',
   };
 }
 
 export function loadSettings() {
   return new Promise((resolve) => {
     try {
-      chrome.storage.sync.get(null, (raw) => resolve(withDefaults(raw)));
+      chrome.storage.sync.get(null, (raw) => {
+        const s = withDefaults(raw);
+        // 옛 키가 남아 있으면 이행 결과를 저장하고 옛 키를 지운다 (안 지우면 매번 다시 이행된다)
+        if (raw && 'perSite' in raw) chrome.storage.sync.remove('perSite', () => chrome.storage.sync.set(s, () => resolve(s)));
+        else resolve(s);
+      });
     } catch (e) {
       resolve(withDefaults(null));
     }
