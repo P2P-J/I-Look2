@@ -3,7 +3,7 @@
   "name": "I Look",
   "version": "0.1.0",
   "description": "ChatGPT·Claude 화면을 내 색으로. 추천 테마를 고르거나 색 2~3개만 정하면 글자 대비까지 자동으로 맞춰 줍니다.",
-  "default_locale": "ko",
+  "default_locale": "en",
   "permissions": ["storage", "scripting", "webNavigation"],
   "background": { "service_worker": "background.js" },
   "host_permissions": ["https://chatgpt.com/*", "https://claude.ai/*", "https://*.claudeusercontent.com/*"],

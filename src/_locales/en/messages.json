@@ -34,6 +34,7 @@
 
   "popup_settings": { "message": "Settings" },
   "popup_lang": { "message": "Language" },
+  "popup_lang_sub": { "message": "언어" },
   "popup_lang_auto": { "message": "Auto" },
   "popup_same_theme": { "message": "Use the same theme on both sites" },
   "popup_same_theme_sub": { "message": "Apply {site}'s {theme} to {other} too" },

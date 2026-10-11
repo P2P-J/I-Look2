@@ -1,10 +1,11 @@
-import { derive } from '../engine/derive.js';
-import { hexToOklch, oklchToHex } from '../engine/color.js';
-import { PRESETS, findPreset } from '../themes/presets.js';
-import { loadSettings, saveSettings, resolveSeeds, newCustomId } from '../storage.js';
+import { oklchToHex } from '../engine/color.js';
+import { PRESETS } from '../themes/presets.js';
+import { loadSettings, saveSettings, resolveSeeds, newCustomId, siteKey } from '../storage.js';
+import * as i18n from './i18n.js';
+import { renderHeader, renderNow, renderGrid, renderChips, renderEditor, renderSettings, paintChrome, SITE_NAME } from './views.js';
 
 const $ = (sel) => document.querySelector(sel);
-const SITE_LABEL = { chatgpt: 'ChatGPT', claude: 'Claude', 'claude-code': 'Claude Code' };
+const t = i18n.t;
 
 let settings = null;
 let site = 'claude';
@@ -12,95 +13,54 @@ let filter = 'all';
 let editing = null;
 let previewTimer = null;
 
-function miniHtml(seeds) {
-  const t = derive(seeds).tokens;
-  const vars = [
-    ['m-bg', 'bg-app'], ['m-sidebar', 'bg-sidebar'], ['m-side-text', 'sidebar-text'], ['m-side-active', 'sidebar-active'],
-    ['m-text', 'text-primary'], ['m-user', 'bg-user-msg'], ['m-code', 'bg-code'], ['m-surface', 'bg-surface'], ['m-border', 'border-subtle'], ['m-accent', 'accent'],
-  ].map(([v, k]) => `--${v}:${t[k]}`).join(';');
-  return `<div class="mini" style="${vars}">
-    <div class="m-side"><i class="on"></i><i></i><i></i><i></i></div>
-    <div class="m-main"><div class="m-user"></div><div class="m-line"></div><div class="m-line short"></div><div class="m-code"></div><div class="m-input"></div></div>
-  </div>`;
+const current = () => resolveSeeds(settings, site);
+const otherSite = () => (site === 'chatgpt' ? 'claude' : 'chatgpt');
+
+function show(view) {
+  for (const v of ['list', 'edit', 'settings']) $(`#view-${v}`).hidden = v !== view;
 }
 
-function paintChrome(seeds) {
-  const t = derive(seeds).tokens;
-  const r = document.documentElement.style;
-  const map = {
-    '--bg': 'bg-app', '--surface': 'bg-surface', '--elevated': 'bg-elevated', '--hover': 'bg-hover', '--active': 'bg-active',
-    '--text': 'text-primary', '--text-2': 'text-secondary', '--muted': 'text-muted', '--border': 'border-subtle', '--border-strong': 'border-strong',
-    '--accent': 'accent', '--on-accent': 'text-on-accent', '--accent-soft': 'accent-soft', '--danger': 'danger', '--shadow': 'shadow',
-  };
-  for (const [v, k] of Object.entries(map)) r.setProperty(v, t[k]);
-  r.setProperty('color-scheme', derive(seeds).isLight ? 'light' : 'dark');
+function renderList() {
+  const cur = current();
+  renderHeader(site, settings.enabled);
+  renderNow(cur, site, settings.enabled, t);
+  renderChips(filter);
+  renderGrid(settings, filter, cur.id, t);
+  paintChrome(cur.seeds);
 }
 
-function card(theme, activeId) {
-  const b = document.createElement('button');
-  b.className = 'card' + (theme.id === activeId ? ' is-active' : '');
-  b.dataset.id = theme.id;
-  b.setAttribute('aria-pressed', theme.id === activeId ? 'true' : 'false');
-  b.innerHTML = `${miniHtml(theme.seeds)}<div class="label"><span>${theme.name}</span><small>${theme.series || ''}</small></div>`;
-  return b;
-}
-
-function renderBrowse() {
-  const active = resolveSeeds(settings, site).id;
-  const pg = $('#preset-grid');
-  pg.innerHTML = '';
-  PRESETS.filter((p) => filter === 'all' || p.mode === filter).forEach((p) => pg.appendChild(card(p, active)));
-
-  const cg = $('#custom-grid');
-  cg.innerHTML = '';
-  const customs = settings.customThemes || [];
-  customs.forEach((c) => cg.appendChild(card({ ...c, series: '내 테마' }, active)));
-  $('#custom-empty').hidden = customs.length > 0;
-
-  $('#enabled').checked = settings.enabled;
-  paintChrome(resolveSeeds(settings, site).seeds);
+async function applyLang() {
+  const lang = i18n.pickLang(settings.lang, chrome.i18n.getUILanguage());
+  await i18n.load(lang);
+  document.documentElement.lang = lang;
+  i18n.apply(document);
 }
 
 async function activate(id) {
-  const key = settings.perSite ? site : 'claude';
-  const activeTheme = { ...settings.activeTheme };
-  if (settings.perSite) activeTheme[key] = id;
-  else for (const k of Object.keys(activeTheme)) activeTheme[k] = id;
-  settings = await saveSettings({ activeTheme, enabled: true });
-  renderBrowse();
+  settings = await saveSettings({ activeTheme: { ...settings.activeTheme, [siteKey(site)]: id }, enabled: true });
+  renderList();
 }
 
-function show(view) {
-  $('#view-browse').hidden = view !== 'browse';
-  $('#view-edit').hidden = view !== 'edit';
+async function switchSite(next) {
+  site = next;
+  settings = await saveSettings({ lastSite: site });
+  renderList();
 }
 
+/* 편집 */
 function openEditor(theme, isNew) {
   editing = { id: isNew ? newCustomId() : theme.id, name: theme.name, seeds: { ...theme.seeds }, isNew };
-  $('#theme-name').value = editing.name;
-  $('#delete-custom').hidden = isNew;
-  syncSeedInputs();
-  renderEditPreview();
+  renderEditor(editing, t);
+  $('#preview-hint').textContent = t('popup_preview_hint', { site: SITE_NAME[site] });
   show('edit');
   $('#theme-name').focus();
-}
-
-function syncSeedInputs() {
-  const s = editing.seeds;
-  $('#seed-bg').value = s.bg;
-  $('#seed-bg-hex').value = s.bg;
-  $('#seed-accent').value = s.accent;
-  $('#seed-accent-hex').value = s.accent;
-  $('#seed-sidebar').value = s.sidebar || derive(s).tokens['bg-sidebar'];
-  $('#seed-sidebar-hex').value = s.sidebar || '';
-}
-
-function renderEditPreview() {
-  const result = derive(editing.seeds);
-  $('#edit-preview').outerHTML = miniHtml(editing.seeds).replace('class="mini"', 'class="mini big" id="edit-preview"');
-  $('#notes').innerHTML = result.notes.map((n) => `<li>${n}</li>`).join('');
-  paintChrome(editing.seeds);
   schedulePreview();
+}
+
+function changeColors() {
+  const cur = current();
+  if (cur.custom) openEditor(settings.customThemes.find((c) => c.id === cur.id), false);
+  else openEditor({ name: t('popup_variant_suffix', { name: cur.name }), seeds: cur.seeds }, true);
 }
 
 function schedulePreview() {
@@ -111,15 +71,15 @@ function schedulePreview() {
 async function sendToTabs(msg) {
   try {
     const tabs = await chrome.tabs.query({ url: ['https://chatgpt.com/*', 'https://claude.ai/*'] });
-    await Promise.all(tabs.map((t) => chrome.tabs.sendMessage(t.id, msg).catch(() => {})));
+    await Promise.all(tabs.map((tab) => chrome.tabs.sendMessage(tab.id, msg).catch(() => {})));
   } catch (e) {}
 }
 
 function setSeed(key, hex) {
   if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
   editing.seeds[key] = hex.toLowerCase();
-  syncSeedInputs();
-  renderEditPreview();
+  renderEditor(editing, t);
+  schedulePreview();
 }
 
 function randomSeeds() {
@@ -133,96 +93,111 @@ function randomSeeds() {
 }
 
 async function saveCustom() {
-  const name = $('#theme-name').value.trim() || '내 테마';
-  const list = (settings.customThemes || []).filter((t) => t.id !== editing.id);
+  const name = $('#theme-name').value.trim() || t('popup_default_theme_name');
+  const list = (settings.customThemes || []).filter((x) => x.id !== editing.id);
   list.push({ id: editing.id, name, seeds: editing.seeds });
   settings = await saveSettings({ customThemes: list });
   await sendToTabs({ type: 'ilook:preview-end' });
   await activate(editing.id);
-  show('browse');
+  show('list');
 }
 
 async function deleteCustom() {
-  const list = (settings.customThemes || []).filter((t) => t.id !== editing.id);
-  const patch = { customThemes: list };
-  if (resolveSeeds(settings, site).id === editing.id) {
-    const at = { ...settings.activeTheme };
-    for (const k of Object.keys(at)) if (at[k] === editing.id) at[k] = PRESETS[0].id;
-    patch.activeTheme = at;
-  }
-  settings = await saveSettings(patch);
+  const list = (settings.customThemes || []).filter((x) => x.id !== editing.id);
+  const activeTheme = { ...settings.activeTheme };
+  for (const k of Object.keys(activeTheme)) if (activeTheme[k] === editing.id) activeTheme[k] = PRESETS[0].id;
+  settings = await saveSettings({ customThemes: list, activeTheme });
   await sendToTabs({ type: 'ilook:preview-end' });
-  renderBrowse();
-  show('browse');
+  renderList();
+  show('list');
 }
 
-async function detectActiveSite() {
+async function backToList() {
+  await sendToTabs({ type: 'ilook:preview-end' });
+  renderList();
+  show('list');
+}
+
+/* 설정 */
+function openSettings() {
+  renderSettings(settings, site, current(), t);
+  show('settings');
+}
+
+async function setLang(lang) {
+  settings = await saveSettings({ lang });
+  await applyLang();
+  renderSettings(settings, site, current(), t);
+}
+
+async function copyToOther() {
+  const activeTheme = { ...settings.activeTheme, [otherSite()]: settings.activeTheme[siteKey(site)] };
+  settings = await saveSettings({ activeTheme });
+  $('#same-theme-apply').textContent = t('popup_applied_done');
+}
+
+async function detectSite() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab?.url) return;
-    const u = new URL(tab.url);
-    if (u.hostname.endsWith('chatgpt.com')) site = 'chatgpt';
-    else if (u.hostname.endsWith('claude.ai')) site = u.pathname.startsWith('/code') ? 'claude-code' : 'claude';
-    else return;
-    $('#site-label').textContent = SITE_LABEL[site];
+    const u = new URL(tab?.url || '');
+    if (u.hostname.endsWith('chatgpt.com')) return 'chatgpt';
+    if (u.hostname.endsWith('claude.ai')) return 'claude';
   } catch (e) {}
+  return settings.lastSite;
 }
 
 function bind() {
+  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => switchSite(b.dataset.site)));
   $('#enabled').addEventListener('change', async (e) => {
     settings = await saveSettings({ enabled: e.target.checked });
+    renderList();
   });
+  $('#open-settings').addEventListener('click', openSettings);
+  $('#change-colors').addEventListener('click', changeColors);
   document.querySelectorAll('.chip').forEach((c) =>
     c.addEventListener('click', () => {
       filter = c.dataset.filter;
-      document.querySelectorAll('.chip').forEach((x) => {
-        x.classList.toggle('is-on', x === c);
-        x.setAttribute('aria-selected', x === c ? 'true' : 'false');
-      });
-      renderBrowse();
+      renderList();
     })
   );
-  $('#preset-grid').addEventListener('click', (e) => {
+  $('#grid').addEventListener('click', (e) => {
+    const edit = e.target.closest('[data-edit]');
+    if (edit) {
+      e.stopPropagation();
+      openEditor(settings.customThemes.find((c) => c.id === edit.dataset.edit), false);
+      return;
+    }
     const b = e.target.closest('.card');
     if (b) activate(b.dataset.id);
   });
-  $('#preset-grid').addEventListener('dblclick', (e) => {
-    const b = e.target.closest('.card');
-    if (b) openEditor({ ...findPreset(b.dataset.id), name: findPreset(b.dataset.id).name + ' 변형' }, true);
-  });
-  $('#custom-grid').addEventListener('click', (e) => {
-    const b = e.target.closest('.card');
-    if (!b) return;
-    const t = settings.customThemes.find((x) => x.id === b.dataset.id);
-    if (e.detail === 2) openEditor(t, false);
-    else activate(t.id);
-  });
-  $('#new-custom').addEventListener('click', () => {
-    const base = resolveSeeds(settings, site);
-    openEditor({ name: '내 테마', seeds: { ...base.seeds } }, true);
-  });
-  $('#back').addEventListener('click', async () => {
-    await sendToTabs({ type: 'ilook:preview-end' });
-    renderBrowse();
-    show('browse');
-  });
+  $('#new-theme').addEventListener('click', () => openEditor({ name: t('popup_default_theme_name'), seeds: { ...current().seeds } }, true));
+
+  $('#back-edit').addEventListener('click', backToList);
   for (const key of ['bg', 'accent', 'sidebar']) {
     $(`#seed-${key}`).addEventListener('input', (e) => setSeed(key, e.target.value));
     $(`#seed-${key}-hex`).addEventListener('change', (e) => setSeed(key, e.target.value.trim()));
   }
-  $('#sidebar-auto').addEventListener('click', () => {
-    delete editing.seeds.sidebar;
-    syncSeedInputs();
-    renderEditPreview();
+  $('#sidebar-auto').addEventListener('change', (e) => {
+    if (e.target.checked) delete editing.seeds.sidebar;
+    else editing.seeds.sidebar = $('#seed-sidebar').value;
+    renderEditor(editing, t);
+    schedulePreview();
   });
   $('#dice').addEventListener('click', () => {
     editing.seeds = randomSeeds();
-    syncSeedInputs();
-    renderEditPreview();
+    renderEditor(editing, t);
+    schedulePreview();
   });
   $('#save-custom').addEventListener('click', saveCustom);
   $('#delete-custom').addEventListener('click', deleteCustom);
-  $('#about').addEventListener('click', (e) => {
+
+  $('#back-settings').addEventListener('click', () => {
+    renderList();
+    show('list');
+  });
+  document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  $('#same-theme-apply').addEventListener('click', copyToOther);
+  $('#sources').addEventListener('click', (e) => {
     e.preventDefault();
     chrome.tabs.create({ url: chrome.runtime.getURL('about.html') });
   });
@@ -230,9 +205,10 @@ function bind() {
 
 async function main() {
   settings = await loadSettings();
-  await detectActiveSite();
+  site = await detectSite();
+  await applyLang();
   bind();
-  renderBrowse();
+  renderList();
 }
 
 main();

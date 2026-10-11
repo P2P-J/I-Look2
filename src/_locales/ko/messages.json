@@ -34,6 +34,7 @@
 
   "popup_settings": { "message": "설정" },
   "popup_lang": { "message": "언어" },
+  "popup_lang_sub": { "message": "Language" },
   "popup_lang_auto": { "message": "자동" },
   "popup_same_theme": { "message": "두 사이트 같은 테마 쓰기" },
   "popup_same_theme_sub": { "message": "지금 {site}의 {theme}를 {other}에도" },

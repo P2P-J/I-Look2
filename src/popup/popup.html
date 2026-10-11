@@ -71,15 +71,15 @@
         <label class="auto"><input type="checkbox" id="sidebar-auto" /> <span data-i18n="popup_sidebar_auto"></span></label>
       </div>
       <p class="hint" data-i18n="popup_editor_hint"></p>
+      <p class="hint" id="preview-hint"></p>
       <ul class="notes" id="notes"></ul>
-      <div class="actions">
-        <button type="button" class="btn ghost" id="dice" data-i18n="popup_random"></button>
-        <span class="spacer"></span>
-        <button type="button" class="btn ghost danger" id="delete-custom" hidden data-i18n="popup_delete"></button>
-        <button type="button" class="btn primary" id="save-custom" data-i18n="popup_save"></button>
-      </div>
     </div>
-    <footer class="foot"><span id="preview-hint"></span></footer>
+    <footer class="foot actions">
+      <button type="button" class="btn ghost" id="dice" data-i18n="popup_random"></button>
+      <span class="spacer"></span>
+      <button type="button" class="btn ghost danger" id="delete-custom" hidden data-i18n="popup_delete"></button>
+      <button type="button" class="btn primary" id="save-custom" data-i18n="popup_save"></button>
+    </footer>
   </section>
 
   <section id="view-settings" class="view" hidden>
@@ -89,7 +89,7 @@
     </div>
     <div class="scroll pad">
       <div class="item">
-        <div><span data-i18n="popup_lang"></span><small>Language</small></div>
+        <div><span data-i18n="popup_lang"></span><small data-i18n="popup_lang_sub"></small></div>
         <div class="seg" role="radiogroup">
           <button type="button" data-lang="auto" data-i18n="popup_lang_auto"></button>
           <button type="button" data-lang="ko">한국어</button>
