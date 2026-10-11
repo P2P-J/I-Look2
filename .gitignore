@@ -4,3 +4,4 @@ dist/
 .DS_Store
 measure/results/*.json
 package-lock.json
+.superpowers/
