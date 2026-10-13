@@ -5,3 +5,4 @@ dist/
 measure/results/*.json
 package-lock.json
 .superpowers/
+docs/learning/
