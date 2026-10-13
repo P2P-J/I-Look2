@@ -160,6 +160,15 @@ html[data-ilook] [class*='text-gray-0/'] {
   color: var(--ilook-text-primary) !important;
 }
 
+/* 단축키 표시(⌘K)는 사이드바 밖(접힌 상태의 상단 바)에서도 쓰이고 다크 모드 고정색을 받는다 */
+html[data-ilook] kbd {
+  color: var(--ilook-text-muted) !important;
+}
+
+html[data-ilook] .dframe-sidebar kbd {
+  color: var(--ilook-sidebar-text-muted) !important;
+}
+
 /* 중첩 .cds-root / [data-mode] 범위가 color-scheme을 다시 정해 canvas·canvastext 같은 시스템 색이 뒤집히는 것을 막는다 */
 html[data-ilook='light'] .cds-root,
 html[data-ilook='light'] [data-mode] {

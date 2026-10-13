@@ -104,6 +104,7 @@ html[data-ilook] [data-chat-theme] {
   --interactive-icon-tertiary-default: var(--ilook-text-secondary) !important;
 
   /* 포인트 (ChatGPT 설정의 채팅 테마색과 충돌하지 않게 전부 덮는다) */
+  --blue-400: var(--ilook-accent) !important;        /* 설정 모달의 토글(checked) 등 팔레트 직접 참조 */
   --accent-blue: var(--ilook-accent) !important;
   --bg-accent-static: var(--ilook-accent) !important;
   --theme-blue-default: var(--ilook-accent) !important;
@@ -146,6 +147,16 @@ html[data-ilook] * {
 /* 메뉴 항목은 .__menu-item에서 자체 변수를 선언한다 */
 html[data-ilook] .__menu-item {
   --menu-item-active: var(--ilook-bg-active) !important;
+}
+
+html[data-ilook] .__menu-item[data-color='danger'] {
+  --menu-item-color: var(--ilook-danger) !important; /* 삭제 항목: 다크 모드 고정 빨강(#fa423e) */
+}
+
+/* 기본 버튼(.btn-primary)은 모드별 고정색(gray-50 / #0d0d0d)이라 반전 버튼 토큰으로 */
+html[data-ilook] .btn-primary {
+  background-color: var(--ilook-text-primary) !important;
+  color: var(--ilook-bg-app) !important;
 }
 
 /* 하드코딩 색만 쓰는 출처 칩·토글 (토큰이 없어 클래스로 덮는다).
