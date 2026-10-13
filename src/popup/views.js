@@ -2,14 +2,28 @@
 import { derive } from '../engine/derive.js';
 import { alpha, bestOf, ensureContrast, mix, shiftL } from '../engine/color.js';
 import { PRESETS } from '../themes/presets.js';
+import { otherSite } from '../storage.js';
 
 const $ = (sel) => document.querySelector(sel);
+
+// 같은 시드로 derive를 반복하지 않는다 (목록 렌더마다 프리셋 24개, 색 드래그마다 서너 번 호출된다)
+const deriveCache = new Map();
+export function tokensOf(seeds) {
+  const key = `${seeds.bg}|${seeds.accent}|${seeds.sidebar || ''}`;
+  let r = deriveCache.get(key);
+  if (!r) {
+    r = derive(seeds);
+    if (deriveCache.size > 128) deriveCache.clear();
+    deriveCache.set(key, r);
+  }
+  return r;
+}
 export const SITE_NAME = { chatgpt: 'ChatGPT', claude: 'Claude' };
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 export function miniHtml(seeds, cls = 'mini') {
-  const t = derive(seeds).tokens;
+  const t = tokensOf(seeds).tokens;
   const vars = [
     ['m-bg', 'bg-app'], ['m-sidebar', 'bg-sidebar'], ['m-side-text', 'sidebar-text'], ['m-side-active', 'sidebar-active'],
     ['m-text', 'text-primary'], ['m-user', 'bg-user-msg'], ['m-code', 'bg-code'], ['m-surface', 'bg-surface'], ['m-border', 'border-subtle'], ['m-accent', 'accent'],
@@ -23,7 +37,7 @@ export function miniHtml(seeds, cls = 'mini') {
 // 콘솔 팔레트: 팝업 틀은 테마와 분리된 "콘솔"이지만 테마 밝기를 따르고(어두우면 밤, 밝으면 종이) 테마 색으로 살짝 물든다.
 // 포인트색은 테마 accent를 쓰되 콘솔 면 위에서 3:1을 보장한다.
 export function consolePalette(seeds) {
-  const r = derive(seeds);
+  const r = tokensOf(seeds);
   const t = r.tokens;
   const light = r.isLight;
   const bg = mix(light ? '#f3f0e8' : '#0b0f16', t['bg-app'], light ? 0.4 : 0.3);
@@ -70,7 +84,7 @@ export function renderHeader(site, enabled) {
 const dot = (hex) => `<i class="dot" style="background:${hex}"></i>`;
 
 export function renderNow(current, site, enabled, t) {
-  const r = derive(current.seeds);
+  const r = tokensOf(current.seeds);
   const preset = PRESETS.find((p) => p.id === current.id);
   $('#now-mini').innerHTML = miniHtml(current.seeds);
   $('#now-name').textContent = current.name;
@@ -118,7 +132,7 @@ export function renderChips(filter) {
 
 export function renderEditor(editing, t) {
   const s = editing.seeds;
-  const result = derive(s);
+  const result = tokensOf(s);
   const auto = !s.sidebar;
   $('#theme-name').value = editing.name;
   $('#delete-custom').hidden = editing.isNew;
@@ -139,7 +153,7 @@ export function renderEditor(editing, t) {
 
 export function renderSettings(settings, site, current, t) {
   document.querySelectorAll('[data-lang]').forEach((b) => b.classList.toggle('is-on', b.dataset.lang === settings.lang));
-  const other = site === 'chatgpt' ? 'claude' : 'chatgpt';
+  const other = otherSite(site);
   $('#same-theme-sub').textContent = t('popup_same_theme_sub', { site: SITE_NAME[site], theme: current.name, other: SITE_NAME[other] });
   $('#same-theme-apply').textContent = t('popup_apply');
   $('#version').textContent = 'I LOOK · v' + chrome.runtime.getManifest().version;

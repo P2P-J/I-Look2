@@ -24,6 +24,10 @@ export function siteKey(site) {
   return site === 'chatgpt' ? 'chatgpt' : 'claude';
 }
 
+export function otherSite(site) {
+  return siteKey(site) === 'chatgpt' ? 'claude' : 'chatgpt';
+}
+
 export function resolveSeeds(settings, site) {
   const id = settings.activeTheme?.[siteKey(site)] || DEFAULT_PRESET_ID;
   const custom = (settings.customThemes || []).find((t) => t.id === id);
@@ -46,14 +50,19 @@ export function withDefaults(raw) {
   };
 }
 
-export function loadSettings() {
+// migrate: 옛 키가 남아 있으면 이행 결과를 저장하고 옛 키를 지운다 (안 지우면 매번 다시 이행된다).
+// 쓰기는 팝업만 한다 — 모든 탭·프레임의 콘텐츠 스크립트가 동시에 쓰면 sync 쓰기 한도를 태운다.
+export function loadSettings({ migrate = false } = {}) {
   return new Promise((resolve) => {
     try {
       chrome.storage.sync.get(null, (raw) => {
         const s = withDefaults(raw);
-        // 옛 키가 남아 있으면 이행 결과를 저장하고 옛 키를 지운다 (안 지우면 매번 다시 이행된다)
-        if (raw && 'perSite' in raw) chrome.storage.sync.remove('perSite', () => chrome.storage.sync.set(s, () => resolve(s)));
-        else resolve(s);
+        if (migrate && raw && 'perSite' in raw) {
+          chrome.storage.sync.remove('perSite', () => chrome.storage.sync.set(s, () => {
+            if (chrome.runtime.lastError) console.warn('[ilook] migration write failed', chrome.runtime.lastError.message);
+            resolve(s);
+          }));
+        } else resolve(s);
       });
     } catch (e) {
       resolve(withDefaults(null));
@@ -70,9 +79,14 @@ export function saveSettings(patch) {
   });
 }
 
+// 팝업만 쓰는 값(lastSite, lang)이 바뀐 것은 탭에 알릴 필요가 없다
+const POPUP_ONLY_KEYS = new Set(['lastSite', 'lang']);
+
 export function onSettingsChanged(cb) {
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'sync') loadSettings().then(cb);
+    if (area !== 'sync') return;
+    if (Object.keys(changes).every((k) => POPUP_ONLY_KEYS.has(k))) return;
+    loadSettings().then(cb);
   });
 }
 

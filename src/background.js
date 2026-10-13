@@ -8,11 +8,13 @@ chrome.webNavigation.onCommitted.addListener(async (d) => {
   } catch (e) {
     return;
   }
-  if (!parent || !/\.claudeusercontent\.com$/.test(new URL(parent.url).hostname)) return;
+  let host = '';
+  try { host = new URL(parent?.url || '').hostname; } catch (e) { return; }
+  if (!/\.claudeusercontent\.com$/.test(host)) return;
   const target = { tabId: d.tabId, frameIds: [d.frameId] };
   try {
     await chrome.scripting.insertCSS({ target, files: ['adapters/claude.css', 'adapters/syntax.css'] });
-    await chrome.scripting.executeScript({ target, files: ['content.js'] });
+    await chrome.scripting.executeScript({ target, files: ['content.js'], injectImmediately: true });
   } catch (e) {
     console.warn('[ilook] srcdoc inject failed', e.message);
   }

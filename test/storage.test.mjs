@@ -53,3 +53,10 @@ test('resolveSeeds: 없는 id는 기본 프리셋', () => {
   const s = withDefaults({ activeTheme: { chatgpt: 'gone', claude: 'gone' } });
   assert.equal(resolveSeeds(s, 'chatgpt').id, DEFAULT_SETTINGS.activeTheme.chatgpt);
 });
+
+test('otherSite: 상대 사이트, claude-code는 claude 기준', async () => {
+  const { otherSite } = await import('../src/storage.js');
+  assert.equal(otherSite('chatgpt'), 'claude');
+  assert.equal(otherSite('claude'), 'chatgpt');
+  assert.equal(otherSite('claude-code'), 'chatgpt');
+});

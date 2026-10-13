@@ -30,9 +30,7 @@
       "js": ["content.js"],
       "css": ["adapters/claude.css", "adapters/syntax.css"],
       "run_at": "document_start",
-      "all_frames": true,
-      "match_about_blank": true,
-      "match_origin_as_fallback": true
+      "all_frames": true
     }
   ],
   "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" }

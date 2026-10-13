@@ -1,6 +1,7 @@
 import { oklchToHex } from '../engine/color.js';
 import { PRESETS } from '../themes/presets.js';
-import { loadSettings, saveSettings, resolveSeeds, newCustomId, siteKey } from '../storage.js';
+import { loadSettings, saveSettings, resolveSeeds, newCustomId, siteKey, otherSite } from '../storage.js';
+import { detectSite as detectSiteOf } from '../content/apply.js';
 import * as i18n from './i18n.js';
 import { encodeTheme, decodeTheme } from './share.js';
 import { renderHeader, renderNow, renderGrid, renderChips, renderEditor, renderSettings, paintChrome, SITE_NAME } from './views.js';
@@ -13,9 +14,10 @@ let site = 'claude';
 let filter = 'all';
 let editing = null;
 let previewTimer = null;
+let previewPorts = [];
+let importing = false;
 
 const current = () => resolveSeeds(settings, site);
-const otherSite = () => (site === 'chatgpt' ? 'claude' : 'chatgpt');
 
 function show(view) {
   for (const v of ['list', 'edit', 'settings']) $(`#view-${v}`).hidden = v !== view;
@@ -42,9 +44,8 @@ async function activate(id) {
   renderList();
 }
 
-async function switchSite(next) {
+function switchSite(next) {
   site = next;
-  settings = await saveSettings({ lastSite: site });
   renderList();
 }
 
@@ -54,7 +55,23 @@ function openEditor(theme, isNew) {
   renderEditor(editing, t);
   show('edit');
   $('#theme-name').focus();
-  schedulePreview();
+  startPreviewSession().then(schedulePreview);
+}
+
+// 편집 중에는 열린 사이트 탭마다 포트를 열어 둔다. 팝업이 닫히면 포트가 끊겨 탭이 저장된 테마로 돌아간다.
+async function startPreviewSession() {
+  endPreviewSession();
+  try {
+    const tabs = await chrome.tabs.query({ url: ['https://chatgpt.com/*', 'https://claude.ai/*'] });
+    previewPorts = tabs.map((tab) => { try { return chrome.tabs.connect(tab.id, { name: 'ilook:preview' }); } catch (e) { return null; } }).filter(Boolean);
+  } catch (e) {}
+}
+
+function endPreviewSession() {
+  clearTimeout(previewTimer);
+  previewTimer = null;
+  for (const port of previewPorts) { try { port.disconnect(); } catch (e) {} }
+  previewPorts = [];
 }
 
 function changeColors() {
@@ -97,7 +114,8 @@ async function saveCustom() {
   const list = (settings.customThemes || []).filter((x) => x.id !== editing.id);
   list.push({ id: editing.id, name, seeds: editing.seeds });
   settings = await saveSettings({ customThemes: list });
-  await sendToTabs({ type: 'ilook:preview-end' });
+  endPreviewSession();
+  filter = 'mine';
   await activate(editing.id);
   show('list');
 }
@@ -107,13 +125,13 @@ async function deleteCustom() {
   const activeTheme = { ...settings.activeTheme };
   for (const k of Object.keys(activeTheme)) if (activeTheme[k] === editing.id) activeTheme[k] = PRESETS[0].id;
   settings = await saveSettings({ customThemes: list, activeTheme });
-  await sendToTabs({ type: 'ilook:preview-end' });
+  endPreviewSession();
   renderList();
   show('list');
 }
 
-async function backToList() {
-  await sendToTabs({ type: 'ilook:preview-end' });
+function backToList() {
+  endPreviewSession();
   renderList();
   show('list');
 }
@@ -126,6 +144,7 @@ async function copyCode(theme, btn) {
 }
 
 async function importCode() {
+  if (importing) return;
   const sub = $('#import-sub');
   const theme = decodeTheme($('#import-code').value);
   if (!theme) {
@@ -133,13 +152,18 @@ async function importCode() {
     sub.classList.add('is-error');
     return;
   }
-  const list = [...(settings.customThemes || []), { id: newCustomId(), ...theme }];
-  settings = await saveSettings({ customThemes: list });
-  await activate(list[list.length - 1].id);
-  $('#import-code').value = '';
-  sub.classList.remove('is-error');
-  sub.textContent = t('popup_import_done', { site: SITE_NAME[site] });
-  filter = 'mine';
+  importing = true;
+  try {
+    const list = [...(settings.customThemes || []), { id: newCustomId(), ...theme }];
+    settings = await saveSettings({ customThemes: list });
+    filter = 'mine';
+    await activate(list[list.length - 1].id);
+    $('#import-code').value = '';
+    sub.classList.remove('is-error');
+    sub.textContent = t('popup_import_done', { site: SITE_NAME[site] });
+  } finally {
+    importing = false;
+  }
 }
 
 /* 설정 */
@@ -155,7 +179,7 @@ async function setLang(lang) {
 }
 
 async function copyToOther() {
-  const activeTheme = { ...settings.activeTheme, [otherSite()]: settings.activeTheme[siteKey(site)] };
+  const activeTheme = { ...settings.activeTheme, [otherSite(site)]: settings.activeTheme[siteKey(site)] };
   settings = await saveSettings({ activeTheme });
   $('#same-theme-apply').textContent = t('popup_applied_done');
 }
@@ -164,8 +188,8 @@ async function detectSite() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const u = new URL(tab?.url || '');
-    if (u.hostname.endsWith('chatgpt.com')) return 'chatgpt';
-    if (u.hostname.endsWith('claude.ai')) return 'claude';
+    const s = detectSiteOf(u.hostname, u.pathname);
+    if (s) return siteKey(s);
   } catch (e) {}
   return settings.lastSite;
 }
@@ -233,11 +257,15 @@ function bind() {
 }
 
 async function main() {
-  settings = await loadSettings();
+  settings = await loadSettings({ migrate: true });
   site = await detectSite();
   await applyLang();
   bind();
   renderList();
+  // 마지막에 보던 사이트는 팝업이 닫힐 때 한 번만 저장한다 (탭 클릭마다 쓰면 모든 탭이 다시 렌더한다)
+  window.addEventListener('pagehide', () => {
+    if (site !== settings.lastSite) chrome.storage.sync.set({ lastSite: site });
+  });
 }
 
 main();
