@@ -1,62 +1,119 @@
-# I Look
+<p align="center">
+  <img src="src/icons/128.png" width="72" alt="I Look">
+</p>
 
-ChatGPT, Claude, Claude Code 웹 화면의 색을 바꾸는 크롬 확장 프로그램.
-색 2~3개만 고르면 화면 전체 색 48개가 자동으로 계산되고, 어떤 색을 골라도 글자는 읽힌다.
+<h1 align="center">I Look</h1>
 
-## 왜 만들었나
+<p align="center"><strong>ChatGPT와 Claude를 내 색으로.</strong><br>
+색 두세 개만 고르면 화면 전체가 바뀌고, 글자는 언제나 읽힙니다.</p>
 
-ChatGPT와 Claude는 하루에 몇 시간씩 보는 화면인데, 배경은 흰색 아니면 검은색뿐이다. ChatGPT에 포인트색 설정이 있지만 버튼과 말풍선 일부에만 적용되고, Claude는 라이트·다크 전환이 전부다. 사용자가 직접 CSS를 고치려면 개발 지식이 필요하고, 사이트가 업데이트될 때마다 깨진다.
+<p align="center">
+  추천 테마 24개 · 사이트별 다른 테마 · 실시간 미리보기 · 테마 공유 코드 · 한국어 / English<br>
+  네트워크 요청 0건 · 대화 내용을 읽지 않음
+</p>
 
-기존 테마 확장은 두 극단이다. 프리셋 몇 개를 고르기만 하거나, 색 수십 개를 하나하나 직접 지정해야 한다. 후자는 "검은 배경에 검은 글자"처럼 읽을 수 없는 조합을 막지 못한다.
+<p align="center">
+  <img src="docs/images/claude-midnight.png" width="100%" alt="Claude에 Midnight 테마를 적용한 화면">
+  <sub>Claude · Midnight</sub>
+</p>
 
-## 무엇을 해결했나
+---
 
-| 문제 | 해결 |
+## 하루에 몇 시간씩 보는 화면인데, 왜 흰색 아니면 검은색일까요
+
+ChatGPT와 Claude는 이제 브라우저에서 가장 오래 머무는 탭입니다. 그런데 고를 수 있는 건 라이트와 다크, 둘뿐이죠.
+눈이 편한 크림색, 집중이 잘 되는 짙은 남색, 좋아하는 에디터 테마… 그런 선택지는 없었습니다.
+
+I Look은 그 선택지를 만듭니다. 확장 프로그램 하나를 켜면 ChatGPT, Claude, Claude Code 웹 화면이 **사이드바부터 입력창, 코드 블록, 캔버스, 문서 패널까지** 통째로 내 색이 됩니다.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/chatgpt-romance.png" alt="ChatGPT · Romance"><br><sub>ChatGPT · Romance</sub></td>
+    <td width="50%"><img src="docs/images/chatgpt-mocha.png" alt="ChatGPT · Catppuccin Mocha"><br><sub>ChatGPT · Catppuccin Mocha</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/claude-honey.png" alt="Claude · Honey"><br><sub>Claude · Honey</sub></td>
+    <td width="50%"><img src="docs/images/claude-rose-pine-dawn.png" alt="Claude · Rosé Pine Dawn"><br><sub>Claude · Rosé Pine Dawn</sub></td>
+  </tr>
+</table>
+
+---
+
+## 색 세 개면 끝납니다
+
+다른 테마 도구는 둘 중 하나입니다. 프리셋 몇 개 중에 고르거나, 색 수십 개를 직접 채우거나.
+후자는 "검은 배경에 검은 글자" 같은 사고를 막아 주지 않습니다.
+
+I Look은 **배경, 포인트, 사이드바(선택)** 세 가지 색만 받습니다. 나머지는 색 엔진이 계산합니다.
+
+- **48개 토큰 자동 계산.** 본문 글자, 흐린 글자, 링크, 선, 카드, 메뉴, hover, 말풍선, 코드 블록, 코드 하이라이트까지. OKLCH 색공간에서 계산하기 때문에 어떤 색상에서도 밝기 단계가 고르게 나옵니다.
+- **읽히는 글자를 보장.** 글자색은 사용자가 고르지 않습니다. 글자가 놓이는 모든 면(배경, 입력창, 메뉴, 사이드바, 선택된 항목) 위에서 대비 기준을 넘길 때까지 엔진이 조정합니다. 형광 핑크 배경을 고르더라도 글이 보입니다.
+- **라이트와 다크를 자동 판별.** 배경이 밝으면 사이트 전체가 라이트 모드로, 어두우면 다크 모드로 맞춰집니다. 사이트 자체 설정을 건드릴 필요가 없습니다.
+
+---
+
+## 추천 테마 24개
+
+눈이 편한 **Mood** 시리즈 10개, 선명한 **Radix** 시리즈 7개, 에디터에서 익숙한 **Editor** 시리즈 7개. 라이트와 다크가 고르게 들어 있습니다.
+
+<p align="center">
+  <img src="docs/images/presets.png" width="100%" alt="추천 테마 24개">
+</p>
+
+| 시리즈 | 테마 |
 | --- | --- |
-| 색을 수십 개 지정해야 한다 | 배경·포인트·사이드바 **3색만** 고르면 나머지 45개를 색 엔진이 계산한다 |
-| 글자가 안 보이는 조합이 나온다 | 모든 글자색은 배경에서 계산하고 WCAG 대비(본문 4.5:1 이상)를 **항상 보장**한다. 사용자는 글자색을 고를 수 없다 |
-| 사이트 개편에 깨진다 | 사이트별 차이는 어댑터 CSS 한 파일에만 둔다. 색 전수 수집 스크립트로 빠진 곳을 숫자로 찾는다 |
-| 새로고침 때 원래 색이 번쩍인다 | 계산된 CSS를 사이트 localStorage에 캐시해 첫 페인트 전에 적용한다 |
-| 어디를 칠해야 하는지 모른다 | 채팅 화면을 14개 구역, 187개 요소, 상태 9종으로 분해한 구역 맵을 기준으로 삼는다 |
+| Mood | Daybreak · Meadow · Lavender · Romance · Honey · Cocoa · Midnight · Moss · Twilight · Ember |
+| Radix | Sky · Mint · Amber · Plum · Indigo Dark · Teal Dark · Crimson Dark |
+| Editor | Catppuccin Latte · Catppuccin Mocha · Nord Light · Nord Dark · Rosé Pine Dawn · Rosé Pine Moon · Dracula |
 
-## 어떻게 동작하나
+---
 
-```
-팝업에서 시드 3색 선택
-      │
-      ▼
-색 엔진 (src/engine)            OKLCH 색공간에서 토큰 48개 계산
-  · 배경 휘도로 글자 방향 결정      어두우면 밝은 글자, 밝으면 어두운 글자
-  · ensureContrast()             대비 기준에 닿을 때까지 명도만 조정
-  · 층 분리 보장                  hover·카드·메뉴가 배경과 구분되게
-      │
-      ▼
-콘텐츠 스크립트 (src/content)    html[data-ilook]에 CSS 변수 주입
-      │                          localStorage 캐시로 번쩍임 방지
-      ▼
-어댑터 CSS (src/adapters)        사이트 변수(--bg-100, --main-surface-primary …)를
-                                 I Look 토큰(--ilook-*)에 연결
-```
+## 팝업은 테마 콘솔입니다
 
-**구조의 핵심은 3층 분리다.** 구역(화면 위치)은 토큰(의미)만 참조하고, 테마는 시드 3색만 가진다. 구역을 아무리 잘게 쪼개도 테마 하나 만드는 비용은 색 3개로 고정된다.
+게임 아이템창과 개발자 콘솔을 섞은 디자인. 지금 적용된 테마의 색 값이 한눈에 보이고, 누르면 바로 바뀝니다.
 
-## 기술 결정
+<p align="center">
+  <img src="docs/images/popup.png" width="100%" alt="I Look 팝업: 테마 목록, 색 바꾸기, 설정">
+  <sub>테마 목록 · 색 바꾸기(실시간 미리보기) · 설정</sub>
+</p>
 
-- **OKLCH 색공간**: 명도가 사람 눈과 비슷하게 움직여서 "한 단계 밝게"가 모든 색상에서 같은 체감이 된다. HSL은 노랑과 파랑에서 틀린다.
-- **글자색은 자동**: 사용자 자유도를 줄이는 대신 "읽을 수 없는 테마"를 원천 차단했다. 극단 시드 20개(순백, 순흑, 중간 회색, 형광 핑크 등)로 테스트한다.
-- **외부 API 없음**: 팔레트는 전부 번들하고 런타임 네트워크 요청은 0건이다. 대화 내용을 읽지 않는다.
-- **Manifest V3**, 권한은 `storage` 하나. `tabs` 권한은 "방문 기록 읽기" 경고를 띄우므로 쓰지 않는다.
-- **Claude 변수 형식 대응**: Claude의 CSS 변수는 `50 23% 94%`처럼 HSL 세 성분만 담는다. 엔진이 hex·HSL·RGB 세 형식을 모두 내보내 어댑터가 맞는 걸 쓴다.
+- **사이트별로 다른 테마.** 위쪽 탭에서 Claude와 ChatGPT를 오가며 각각 다른 테마를 둘 수 있습니다. 같게 쓰고 싶으면 설정에서 한 번에 복사합니다.
+- **실시간 미리보기.** 색을 고르는 동안 열려 있는 탭이 즉시 따라옵니다. 저장하지 않고 닫으면 원래 테마로 돌아갑니다.
+- **🎲 랜덤.** 어울리는 배경과 포인트 조합을 뽑아 줍니다. 마음에 들면 저장하세요.
+- **테마 공유 코드.** 내 테마를 `ilook1/…` 한 줄 코드로 복사해 친구에게 보내면, 상대는 설정에 붙여넣기만 하면 됩니다.
+- **한국어 / English.** 브라우저 언어를 따라가고, 설정에서 바꿀 수 있습니다.
+- **ON/OFF 스위치.** 끄면 새로고침 없이 사이트 원래 색으로 돌아갑니다.
 
-## 테마 출처
+---
 
-| 시리즈 | 출처 | 라이선스 |
-| --- | --- | --- |
-| Notion | Notion 앱 색상 체계 (제3자 추출값) | 상표 검토 예정 |
-| Radix | [Radix Colors](https://github.com/radix-ui/colors) 1·2·9단계 | MIT |
-| Editor | [Catppuccin](https://github.com/catppuccin/catppuccin), [Nord](https://www.nordtheme.com/), [Rosé Pine](https://rosepinetheme.com/), [Dracula](https://draculatheme.com/) | MIT |
+## 구석까지 칠합니다
 
-## 시작하기
+두 사이트의 실제 화면을 요소 단위로 측정해서, 남은 색이 0개가 될 때까지 맞췄습니다.
+
+| 구역 | 적용 |
+| --- | --- |
+| 채팅 | 말풍선, 본문, 마크다운, 표, 인용, 입력창, 하단 바 |
+| 사이드바 | 배경, 항목, hover, 선택, 접힌 상태, 단축키 표시 |
+| 코드 | 코드 블록 배경과 **구문 하이라이트 색**까지 테마에 맞춰 다시 계산 |
+| ChatGPT | 캔버스 카드, 이미지 답변, Codex, 출처 칩, 설정·공유 모달, 메뉴 |
+| Claude | 아티팩트·문서 패널(세 겹 iframe 안까지), 프로젝트, Claude Code 세션 |
+| 모드 | 사이트의 라이트·다크 전환, 새 ChatGPT 셸과 옛 셸 모두 |
+
+**번쩍임이 없습니다.** 계산된 색을 사이트에 캐시해 두고 첫 화면이 그려지기 전에 적용합니다. 새로고침해도 흰 화면이 스치지 않습니다.
+
+---
+
+## 아무것도 보내지 않습니다
+
+- 네트워크 요청 **0건**. 모든 색은 기기 안에서 계산합니다.
+- 대화 내용을 읽지 않습니다. 하는 일은 CSS 변수를 바꿔 끼우는 것뿐입니다.
+- 권한은 설정 저장(`storage`), 문서 프레임에 스타일 주입(`scripting`, `webNavigation`), 그리고 chatgpt.com과 claude.ai 접근뿐입니다. 다른 사이트에는 아무것도 하지 않습니다.
+
+---
+
+## 설치
+
+크롬 웹 스토어 등록을 준비 중입니다. 지금은 직접 빌드해서 쓸 수 있습니다.
 
 ```
 git clone https://github.com/P2P-J/I-Look2.git
@@ -65,39 +122,45 @@ npm install
 npm run build
 ```
 
-크롬 → `chrome://extensions` → 개발자 모드 → "압축해제된 확장 프로그램을 로드" → `dist/extension`.
+1. 크롬에서 `chrome://extensions` 열기
+2. 오른쪽 위 **개발자 모드** 켜기
+3. **압축해제된 확장 프로그램을 로드합니다** → `dist/extension` 폴더 선택
+4. chatgpt.com 또는 claude.ai를 새로고침하고 툴바의 I Look 아이콘을 누르세요
 
 ```
-npm test            색 엔진 테스트 (극단 시드 20개 포함 27개)
-npm run preview     dist/preview.html — 테마 16개 토큰 미리보기
-npm run build       확장 빌드
+npm test          색 엔진·대비·저장·공유 코드 테스트
+npm run preview   dist/preview.html — 테마 토큰 미리보기
 ```
-
-## 구조
-
-```
-src/engine/     색 엔진 — 순수 함수, 브라우저 없이 테스트
-src/themes/     추천 테마 24개 시드
-src/content/    콘텐츠 스크립트
-src/popup/      팝업 UI
-src/adapters/   사이트별 CSS (chatgpt.css, claude.css)
-measure/        색 전수 수집 스크립트 + 실측 가이드
-test/           엔진 테스트
-tools/          빌드·미리보기 스크립트
-```
-
-## 진행 상태
-
-- [x] 구역 맵 (14구역, 187개 요소, 상태 9종)
-- [x] 색 엔진, 테스트 27개
-- [x] 추천 테마 24개
-- [x] 확장 뼈대 (콘텐츠 스크립트, 팝업, 빌드)
-- [ ] 어댑터 CSS 실측 보정 → 원래 색 잔존 0개
-- [ ] Claude Code 웹 전용 요소
-- [ ] 크롬 웹 스토어 출시
-
-이어서 할 일은 [HANDOFF.md](HANDOFF.md)에 있다.
 
 ---
 
-I Look은 OpenAI, Anthropic과 무관한 독립 프로젝트다.
+## 개발
+
+```
+src/engine/     색 엔진 — 시드 3색 → 토큰 48개, 순수 함수
+src/themes/     추천 테마 24개
+src/adapters/   사이트별 CSS (chatgpt.css, claude.css, syntax.css)
+src/content/    콘텐츠 스크립트 — 토큰 주입, 캐시, 미리보기
+src/background.js  샌드박스 프레임 주입
+src/popup/      팝업 UI
+src/_locales/   ko · en
+test/           테스트
+```
+
+구조의 핵심은 세 층의 분리입니다. **구역**(화면 위치)은 **토큰**(의미)만 참조하고, **테마**는 시드 3색만 가집니다. 사이트가 개편되면 어댑터 CSS 한 파일만 손보면 되고, 테마 하나를 만드는 비용은 언제나 색 3개입니다.
+
+자세한 내부 구조와 검증 방법은 [HANDOFF.md](HANDOFF.md)에 있습니다.
+
+---
+
+## 출처와 라이선스
+
+| 시리즈 | 출처 | 라이선스 |
+| --- | --- | --- |
+| Mood | Notion 앱 색상 체계를 참고 ([Matthias Frank의 정리](https://matthiasfrank.de/en/notion-colors/)) | Notion Labs와 무관 |
+| Radix | [Radix Colors](https://github.com/radix-ui/colors) | MIT |
+| Editor | [Catppuccin](https://github.com/catppuccin/catppuccin) · [Nord](https://www.nordtheme.com/) · [Rosé Pine](https://rosepinetheme.com/) · [Dracula](https://draculatheme.com/) | MIT |
+
+팝업 글꼴 [Chakra Petch](https://fonts.google.com/specimen/Chakra+Petch), [JetBrains Mono](https://www.jetbrains.com/lp/mono/)는 SIL Open Font License 1.1입니다.
+
+I Look은 OpenAI, Anthropic, Notion Labs와 무관한 독립 프로젝트입니다. ChatGPT, Claude, Notion은 각 회사의 상표입니다.
