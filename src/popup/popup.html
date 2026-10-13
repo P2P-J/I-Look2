@@ -76,6 +76,7 @@
     </div>
     <footer class="foot actions">
       <button type="button" class="btn ghost" id="dice" data-i18n="popup_random"></button>
+      <button type="button" class="btn ghost" id="copy-code" data-i18n="popup_copy_code" data-i18n-title="popup_copy_code_title"></button>
       <span class="spacer"></span>
       <button type="button" class="btn ghost danger" id="delete-custom" hidden data-i18n="popup_delete"></button>
       <button type="button" class="btn primary" id="save-custom" data-i18n="popup_save"></button>
@@ -99,6 +100,13 @@
       <div class="item">
         <div><span data-i18n="popup_same_theme"></span><small id="same-theme-sub"></small></div>
         <button type="button" class="btn" id="same-theme-apply" data-i18n="popup_apply"></button>
+      </div>
+      <div class="item col">
+        <div><span data-i18n="popup_import_title"></span><small id="import-sub" data-i18n="popup_import_sub"></small></div>
+        <div class="import-row">
+          <input id="import-code" class="hex" spellcheck="false" autocomplete="off" data-i18n-placeholder="popup_import_placeholder" />
+          <button type="button" class="btn" id="import-add" data-i18n="popup_import_add"></button>
+        </div>
       </div>
       <a class="item link" href="#" id="sources">
         <div><span data-i18n="popup_sources"></span><small data-i18n="popup_sources_sub"></small></div>

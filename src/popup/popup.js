@@ -2,6 +2,7 @@ import { oklchToHex } from '../engine/color.js';
 import { PRESETS } from '../themes/presets.js';
 import { loadSettings, saveSettings, resolveSeeds, newCustomId, siteKey } from '../storage.js';
 import * as i18n from './i18n.js';
+import { encodeTheme, decodeTheme } from './share.js';
 import { renderHeader, renderNow, renderGrid, renderChips, renderEditor, renderSettings, paintChrome, SITE_NAME } from './views.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -130,6 +131,32 @@ async function setLang(lang) {
   renderSettings(settings, site, current(), t);
 }
 
+/* 공유 코드 */
+async function copyCode() {
+  const code = encodeTheme({ name: $('#theme-name').value.trim() || editing.name, seeds: editing.seeds });
+  try { await navigator.clipboard.writeText(code); } catch (e) {}
+  const b = $('#copy-code');
+  b.textContent = t('popup_copied');
+  setTimeout(() => { b.textContent = t('popup_copy_code'); }, 1500);
+}
+
+async function importCode() {
+  const sub = $('#import-sub');
+  const theme = decodeTheme($('#import-code').value);
+  if (!theme) {
+    sub.textContent = t('popup_import_invalid');
+    sub.classList.add('is-error');
+    return;
+  }
+  const list = [...(settings.customThemes || []), { id: newCustomId(), ...theme }];
+  settings = await saveSettings({ customThemes: list });
+  await activate(list[list.length - 1].id);
+  $('#import-code').value = '';
+  sub.classList.remove('is-error');
+  sub.textContent = t('popup_import_done', { site: SITE_NAME[site] });
+  filter = 'mine';
+}
+
 async function copyToOther() {
   const activeTheme = { ...settings.activeTheme, [otherSite()]: settings.activeTheme[siteKey(site)] };
   settings = await saveSettings({ activeTheme });
@@ -197,6 +224,10 @@ function bind() {
   });
   document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
   $('#same-theme-apply').addEventListener('click', copyToOther);
+  $('#copy-code').addEventListener('click', copyCode);
+  $('#import-add').addEventListener('click', importCode);
+  $('#import-code').addEventListener('keydown', (e) => { if (e.key === 'Enter') importCode(); });
+  $('#import-code').addEventListener('input', () => { $('#import-sub').classList.remove('is-error'); $('#import-sub').textContent = t('popup_import_sub'); });
   $('#sources').addEventListener('click', (e) => {
     e.preventDefault();
     chrome.tabs.create({ url: chrome.runtime.getURL('about.html') });

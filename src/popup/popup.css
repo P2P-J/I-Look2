@@ -133,6 +133,10 @@ button:focus-visible, input:focus-visible, a:focus-visible, .switch input:focus-
 .item > div { min-width: 0; }
 .item small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
 .item.link:hover { background: var(--hover); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+.item.col { flex-direction: column; align-items: stretch; gap: 8px; }
+.import-row { display: flex; gap: 6px; }
+.import-row .hex { flex: 1; min-width: 0; font-size: 11px; }
+.item small.is-error { color: var(--danger); }
 .seg { display: flex; background: var(--active); border-radius: 7px; padding: 2px; font-size: 12px; flex: none; }
 .seg button { padding: 3px 8px; border-radius: 5px; color: var(--text-2); }
 .seg button.is-on { background: var(--bg); color: var(--text); font-weight: 600; }

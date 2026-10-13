@@ -27,6 +27,11 @@ test('옛 저장값: perSite=true였으면 사이트별 값을 유지한다', ()
   assert.deepEqual(s.activeTheme, { chatgpt: 'nord-light', claude: 'dracula' });
 });
 
+test('옛 Notion 프리셋 id는 Mood id로 이행한다', () => {
+  const s = withDefaults({ activeTheme: { chatgpt: 'notion-pink-light', claude: 'notion-blue-dark' } });
+  assert.deepEqual(s.activeTheme, { chatgpt: 'mood-romance', claude: 'mood-midnight' });
+});
+
 test('잘못된 lang·lastSite는 기본값으로', () => {
   const s = withDefaults({ lang: 'fr', lastSite: 'bing' });
   assert.equal(s.lang, 'auto');

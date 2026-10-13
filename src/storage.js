@@ -11,6 +11,14 @@ export const DEFAULT_SETTINGS = {
   lastSite: 'claude',
 };
 
+// 2026-10-14 Notion 시리즈를 Mood로 개명하기 전에 저장된 id
+const LEGACY_IDS = {
+  'notion-blue-light': 'mood-daybreak', 'notion-green-light': 'mood-meadow', 'notion-purple-light': 'mood-lavender',
+  'notion-pink-light': 'mood-romance', 'notion-yellow-light': 'mood-honey', 'notion-brown-light': 'mood-cocoa',
+  'notion-blue-dark': 'mood-midnight', 'notion-green-dark': 'mood-moss', 'notion-purple-dark': 'mood-twilight', 'notion-red-dark': 'mood-ember',
+};
+const migrateId = (id) => LEGACY_IDS[id] || id;
+
 // Claude Code 웹(claude.ai/code)은 Claude 테마를 따른다
 export function siteKey(site) {
   return site === 'chatgpt' ? 'chatgpt' : 'claude';
@@ -31,7 +39,7 @@ export function withDefaults(raw) {
   if (raw.perSite === false && at.claude) at.chatgpt = at.claude;
   return {
     enabled: raw.enabled === undefined ? true : !!raw.enabled,
-    activeTheme: { chatgpt: at.chatgpt || DEFAULT_PRESET_ID, claude: at.claude || DEFAULT_PRESET_ID },
+    activeTheme: { chatgpt: migrateId(at.chatgpt) || DEFAULT_PRESET_ID, claude: migrateId(at.claude) || DEFAULT_PRESET_ID },
     customThemes: Array.isArray(raw.customThemes) ? raw.customThemes : [],
     lang: LANGS.includes(raw.lang) ? raw.lang : 'auto',
     lastSite: SITES.includes(raw.lastSite) ? raw.lastSite : 'claude',
