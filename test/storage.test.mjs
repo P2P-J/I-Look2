@@ -60,3 +60,12 @@ test('otherSite: 상대 사이트, claude-code는 claude 기준', async () => {
   assert.equal(otherSite('claude'), 'chatgpt');
   assert.equal(otherSite('claude-code'), 'chatgpt');
 });
+
+test('시드가 hex가 아닌 커스텀 테마는 버린다', () => {
+  const s = withDefaults({ customThemes: [
+    { id: 'a', name: 'ok', seeds: { bg: '#112233', accent: '#aabbcc' } },
+    { id: 'b', name: 'bad', seeds: { bg: 'red} body{x:1', accent: '#aabbcc' } },
+    { id: 'c', name: 'bad2', seeds: { bg: '#112233', accent: '#aabbcc', sidebar: 'url(x)' } },
+  ] });
+  assert.deepEqual(s.customThemes.map((c) => c.id), ['a']);
+});

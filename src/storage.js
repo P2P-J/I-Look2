@@ -36,6 +36,10 @@ export function resolveSeeds(settings, site) {
   return { id: preset.id, name: preset.name, seeds: preset.seeds, custom: false };
 }
 
+const HEX = /^#[0-9a-f]{6}$/i;
+// 시드가 hex가 아닌 커스텀 테마는 버린다 (CSS로 그대로 나가는 값이라 저장소가 깨져도 주입되지 않게)
+const validTheme = (c) => c && typeof c.id === 'string' && typeof c.name === 'string' && c.seeds && HEX.test(c.seeds.bg) && HEX.test(c.seeds.accent) && (c.seeds.sidebar === undefined || HEX.test(c.seeds.sidebar));
+
 export function withDefaults(raw) {
   raw = raw || {};
   const at = { ...(raw.activeTheme || {}) };
@@ -44,7 +48,7 @@ export function withDefaults(raw) {
   return {
     enabled: raw.enabled === undefined ? true : !!raw.enabled,
     activeTheme: { chatgpt: migrateId(at.chatgpt) || DEFAULT_PRESET_ID, claude: migrateId(at.claude) || DEFAULT_PRESET_ID },
-    customThemes: Array.isArray(raw.customThemes) ? raw.customThemes : [],
+    customThemes: Array.isArray(raw.customThemes) ? raw.customThemes.filter(validTheme) : [],
     lang: LANGS.includes(raw.lang) ? raw.lang : 'auto',
     lastSite: SITES.includes(raw.lastSite) ? raw.lastSite : 'claude',
   };

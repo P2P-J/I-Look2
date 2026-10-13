@@ -27,7 +27,7 @@ export function miniHtml(seeds, cls = 'mini') {
   const vars = [
     ['m-bg', 'bg-app'], ['m-sidebar', 'bg-sidebar'], ['m-side-text', 'sidebar-text'], ['m-side-active', 'sidebar-active'],
     ['m-text', 'text-primary'], ['m-user', 'bg-user-msg'], ['m-code', 'bg-code'], ['m-surface', 'bg-surface'], ['m-border', 'border-subtle'], ['m-accent', 'accent'],
-  ].map(([v, k]) => `--${v}:${t[k]}`).join(';');
+  ].map(([v, k]) => `--${v}:${esc(t[k])}`).join(';');
   return `<div class="${cls}" style="${vars}">
     <div class="m-side"><i class="on"></i><i></i><i></i><i></i></div>
     <div class="m-main"><div class="m-user"></div><div class="m-line"></div><div class="m-line short"></div><div class="m-code"></div><div class="m-input"></div></div>
@@ -81,7 +81,7 @@ export function renderHeader(site, enabled) {
   $('#enabled').checked = enabled;
 }
 
-const dot = (hex) => `<i class="dot" style="background:${hex}"></i>`;
+const dot = (hex) => `<i class="dot" style="background:${esc(hex)}"></i>`;
 
 export function renderNow(current, site, enabled, t) {
   const r = tokensOf(current.seeds);

@@ -18,3 +18,11 @@ test('테마 밝기를 CSS에서 읽는다', () => {
 test('밝기 표시가 없는 옛 캐시는 빈 값', () => {
   assert.equal(schemeOf('html[data-ilook] { --ilook-bg-app: #fff; }'), '');
 });
+
+test('tokensToCss: hex·rgba가 아닌 값은 내보내지 않는다', async () => {
+  const { tokensToCss } = await import('../src/content/apply.js');
+  const css = tokensToCss({ 'bg-app': '#112233', 'overlay-dim': 'rgba(0, 0, 0, 0.4)', evil: 'red} body{background:url(x)' }, true);
+  assert.match(css, /--ilook-bg-app: #112233;/);
+  assert.match(css, /--ilook-overlay-dim: rgba\(0, 0, 0, 0\.4\);/);
+  assert.ok(!css.includes('evil'));
+});

@@ -5,8 +5,15 @@ export const CACHE_KEY = 'ilook:css';
 export const STYLE_ID = 'ilook-tokens';
 export const ROOT_ATTR = 'data-ilook';
 
-// sandbox srcdoc 프레임은 hostname이 비어 있으므로 baseURI(부모 주소)로 판별한다
-export function detectSite(hostname = location.hostname || new URL(document.baseURI).hostname, pathname = location.pathname) {
+// sandbox srcdoc 프레임은 hostname이 비어 있으므로 부모 origin으로 판별한다.
+// ancestorOrigins는 페이지가 바꿀 수 없다 (baseURI는 <base href>로 바꿀 수 있다).
+function frameHostname() {
+  if (location.hostname) return location.hostname;
+  try { return new URL(location.ancestorOrigins[0]).hostname; } catch (e) {}
+  try { return new URL(document.baseURI).hostname; } catch (e) { return ''; }
+}
+
+export function detectSite(hostname = frameHostname(), pathname = location.pathname) {
   if (hostname === 'chatgpt.com' || hostname.endsWith('.chatgpt.com')) return 'chatgpt';
   if (hostname === 'claude.ai' || hostname.endsWith('.claude.ai')) return pathname.startsWith('/code') ? 'claude-code' : 'claude';
   // 문서(아티팩트) 본문은 claude.ai 안의 별도 도메인 iframe에 들어 있다
@@ -18,9 +25,13 @@ function isHex(v) {
   return /^#[0-9a-f]{6}$/i.test(v);
 }
 
+// 토큰값은 hex 또는 rgba(…)만 CSS로 내보낸다 (저장소가 깨져도 선언을 벗어나는 문자열이 주입되지 않게)
+const SAFE_VALUE = /^(#[0-9a-f]{6}|rgba?\([0-9.,\s]+\))$/i;
+
 export function tokensToCss(tokens, isLight) {
   const lines = [];
   for (const [k, v] of Object.entries(tokens)) {
+    if (!SAFE_VALUE.test(v)) continue;
     lines.push(`  --ilook-${k}: ${v};`);
     if (isHex(v)) {
       lines.push(`  --ilook-${k}-hsl: ${hslTriple(v)};`);
