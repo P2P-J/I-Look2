@@ -180,9 +180,12 @@ html[data-ilook='dark'] [data-mode] {
   color-scheme: dark !important;
 }
 
-/* 문서(아티팩트) 패널 iframe: claude.ai/code/artifact/… 는 별도 문서라 자체 변수를 쓴다 (html[data-embedded]) */
+/* 문서(아티팩트) 호스트: 패널 iframe(claude.ai/code/artifact/…, html[data-embedded])과
+   독립형 페이지(claude.ai/artifact/…, html[data-frame-uuid])가 같은 자체 변수를 쓴다 */
 html[data-ilook][data-embedded],
-html[data-ilook][data-embedded][data-mode='dark'] {
+html[data-ilook][data-embedded][data-mode='dark'],
+html[data-ilook][data-frame-uuid],
+html[data-ilook][data-frame-uuid][data-mode='dark'] {
   --bg: var(--ilook-bg-app) !important;        /* #fff / #1a1a19 */
   --page: var(--ilook-bg-app) !important;      /* #fcfcfb / #151515 */
   --surf: var(--ilook-bg-surface) !important;  /* #fff / #20201f */
