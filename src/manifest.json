@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "I Look",
+  "name": "__MSG_appName__",
   "version": "0.1.0",
-  "description": "ChatGPT·Claude 화면을 내 색으로. 추천 테마를 고르거나 색 2~3개만 정하면 글자 대비까지 자동으로 맞춰 줍니다.",
+  "description": "__MSG_appDesc__",
   "default_locale": "en",
   "permissions": ["storage", "scripting", "webNavigation"],
   "background": { "service_worker": "background.js" },
