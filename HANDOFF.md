@@ -10,7 +10,7 @@ ChatGPT·Claude 화면 색을 바꾸는 크롬 확장. 이 문서는 "지금 어
 | 색 엔진 (시드 3색 → 토큰 48개, 모든 면 위 대비 보장) | 완성, 테스트 통과 | `src/engine/` |
 | 추천 테마 24개 시드 | 완성 | `src/themes/presets.js` |
 | 콘텐츠 스크립트 (캐시 선주입, storage 동기화, 미리보기, 프레임 주입) | 완성, 실기기 검증 (번쩍임 0, 캐시 복구) | `src/content/`, `src/background.js` |
-| 팝업 (사이트 탭, 현재 상태, 목록·편집·설정, 언어 ko/en) | 완성 | `src/popup/` (`popup.js` 상태 / `views.js` 렌더 / `i18n.js` 문자열) |
+| 팝업 (사이트 탭, 현재 상태, 목록·편집·설정, 언어 ko/en, 테마 공유 코드) | 완성 | `src/popup/` (`popup.js` 상태 / `views.js` 렌더 / `i18n.js` 문자열) |
 | 사이트 어댑터 CSS | **실측 기반 완성** (아래 "구역" 참고) | `src/adapters/` |
 | 빌드 | esbuild, `npm run build` → `dist/extension` | `tools/build-ext.mjs` |
 | 테스트 | `npm test` (엔진·대비·저장·i18n·사이트 감지) | `test/` |
@@ -74,7 +74,7 @@ Claude 문서 패널은 세 겹 iframe이다: `claude.ai/code/artifact/…` → 
 
 ## 남은 작업
 
-1. 팝업: 테마 내보내기·가져오기 (설정 화면에 한 줄 추가)
+1. 팝업: 테마 공유 코드 — 완료 (`src/popup/share.js`, 형식 `ilook1/<배경>/<포인트>/<사이드바|->/<이름>`)
 2. 출시 전 상표 검토 — 완료: Notion 시리즈는 Mood(Daybreak…Ember)로 개명, 설명에 무관 고지, 출처 페이지에 참고 표기
 3. 상위 폴더 `I-LOOK2/`의 10월 8일자 옛 빌드 파일 삭제
 4. ChatGPT 새 셸이 전면 배포되면 옛 셸 블록 제거 검토
