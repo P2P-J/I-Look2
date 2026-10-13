@@ -6,13 +6,15 @@
    주석의 값은 사이트 원래 값 (라이트 / 다크). */
 
 /* 사이트 모드 스위치를 테마 밝기에 맞춘다 (일부 컴포넌트가 lightningcss 스위치를 쓴다). */
-html[data-ilook='light'] {
+html[data-ilook='light'],
+html[data-ilook='light'] [data-theme] {
   --lightningcss-light: initial !important;
   --lightningcss-dark: !important;
   color-scheme: light !important;
 }
 
-html[data-ilook='dark'] {
+html[data-ilook='dark'],
+html[data-ilook='dark'] [data-theme] {
   --lightningcss-light: !important;
   --lightningcss-dark: initial !important;
   color-scheme: dark !important;
@@ -144,6 +146,131 @@ html[data-ilook] * {
   --main-surface-primary: var(--ilook-bg-app) !important;
 }
 
+/* 새 셸(html.chatgpt-theme[data-theme]) + puik 렌더러: 전역 --color-* / --app-color-* 토큰 체계.
+   :where(:root), :where([data-theme]) 범위에서 팔레트(--gray-N)로 선언되고 data-theme=dark면 램프가 뒤집힌다.
+   옛 셸(.light/.dark + --text-primary)과 공존하므로 두 체계를 모두 덮는다. 토큰을 직접 덮는다. */
+html[data-ilook],
+html[data-ilook] [data-theme],
+html[data-ilook] .puik-root {
+  /* 글자 */
+  --color-text: var(--ilook-text-primary) !important;
+  --color-text-emphasis: var(--ilook-text-primary) !important;
+  --color-text-prose: var(--ilook-text-primary) !important;
+  --color-text-primary: var(--ilook-text-primary) !important;
+  --app-color-text-foreground: var(--ilook-text-primary) !important;
+  --app-color-icon-primary: var(--ilook-text-primary) !important;
+  --color-codex-icon: var(--ilook-text-primary) !important;
+  --color-text-button-outline: var(--ilook-text-primary) !important;   /* 모드별 고정 #0d0d0d/#fff */
+  --color-text-mode-toggle-primary: var(--ilook-text-primary) !important;
+  --color-text-secondary: var(--ilook-text-secondary) !important;
+  --color-text-secondary-solid: var(--ilook-text-secondary) !important;
+  --app-color-text-foreground-secondary: var(--ilook-text-secondary) !important;
+  --color-text-tertiary: var(--ilook-text-muted) !important;
+  --color-text-disabled: var(--ilook-text-muted) !important;
+  --color-codex-description: var(--ilook-text-muted) !important;
+  --app-color-text-foreground-tertiary: var(--ilook-text-muted) !important;
+  --color-text-inverse: var(--ilook-bg-app) !important;
+  --color-text-primary-solid: var(--ilook-bg-app) !important;
+  --app-color-text-button-primary: var(--ilook-bg-app) !important;
+  --color-text-info: var(--ilook-text-link) !important;
+  --color-text-info-soft: var(--ilook-text-link) !important;
+  --color-text-info-ghost: var(--ilook-text-link) !important;
+  --color-text-discovery: var(--ilook-text-link) !important;
+  --app-color-text-accent: var(--ilook-text-link) !important;
+  --color-text-header-upgrade: var(--ilook-accent) !important;
+  --color-text-info-solid: var(--ilook-text-on-accent) !important;
+  --color-text-user-message: var(--ilook-text-on-user-msg) !important;
+  --color-text-danger: var(--ilook-danger) !important;
+  --color-text-danger-surface: var(--ilook-danger) !important;
+  --app-color-text-error: var(--ilook-danger) !important;
+  --color-text-warning: var(--ilook-warning) !important;
+  --color-text-warning-surface: var(--ilook-warning) !important;
+  --color-text-success: var(--ilook-success) !important;
+
+  /* 면 */
+  --color-surface: var(--ilook-bg-app) !important;
+  --app-color-background-surface: var(--ilook-bg-app) !important;
+  --color-surface-secondary: var(--ilook-bg-surface) !important;
+  --app-color-background-surface-under: var(--ilook-bg-surface) !important;
+  --color-surface-card: var(--ilook-bg-surface) !important;
+  --app-color-background-card: var(--ilook-bg-surface) !important;
+  --app-color-background-editor-opaque: var(--ilook-bg-surface) !important;
+  --color-surface-tertiary: var(--ilook-bg-hover) !important;
+  --color-surface-elevated: var(--ilook-bg-elevated) !important;
+  --app-color-background-elevated-primary: var(--ilook-bg-elevated) !important;
+  --app-color-background-elevated-primary-opaque: var(--ilook-bg-surface) !important;  /* 입력창 면 */
+  --app-color-background-elevated-secondary-opaque: var(--ilook-bg-hover) !important;
+  --color-background-composer-surface: var(--ilook-bg-surface) !important;
+  --color-background-composer-action-bar: var(--ilook-bg-surface) !important;
+  --color-surface-elevated-secondary: var(--ilook-bg-hover) !important;
+  --app-color-background-elevated-secondary: var(--ilook-bg-hover) !important;
+  --app-color-background-control: var(--ilook-bg-hover) !important;
+  --app-color-background-control-opaque: var(--ilook-bg-hover) !important;
+  --app-color-background-button-secondary: var(--ilook-bg-hover) !important;
+  --app-color-background-button-secondary-hover: var(--ilook-bg-active) !important;
+  --color-background-primary-ghost-hover: var(--ilook-bg-hover) !important;
+  --color-background-primary-ghost-active: var(--ilook-bg-active) !important;
+  --color-background-primary-soft: var(--ilook-bg-hover) !important;
+  --color-background-primary-soft-hover: var(--ilook-bg-active) !important;
+  --color-background-primary-soft-active: var(--ilook-bg-active) !important;
+  --color-background-primary-soft-alpha: var(--ilook-bg-hover) !important;
+  --color-background-secondary-soft: var(--ilook-bg-hover) !important;
+  --color-background-secondary-soft-hover: var(--ilook-bg-active) !important;
+  --color-background-secondary-soft-alpha: var(--ilook-bg-hover) !important;
+  --color-background-secondary-ghost-hover: var(--ilook-bg-hover) !important;
+  --color-background-home-suggestion-hover: var(--ilook-bg-hover) !important;
+  --color-background-button-outline-hover: var(--ilook-bg-hover) !important;
+  --color-background-mode-toggle-selected: var(--ilook-bg-elevated) !important;
+  --color-background-user-message: var(--ilook-bg-user-msg) !important;
+  --color-background-text-selection: var(--ilook-accent-soft) !important;
+  --color-background-primary-solid: var(--ilook-text-primary) !important;     /* 반전 버튼 */
+  --color-background-primary-solid-hover: var(--ilook-text-secondary) !important;
+  --color-background-composer-primary: var(--ilook-accent) !important;        /* 전송 버튼 */
+  --color-background-info-solid: var(--ilook-accent) !important;
+  --color-background-header-upgrade-hover: var(--ilook-accent-soft) !important;
+  --color-background-warning-surface: var(--ilook-badge) !important;
+  --color-background-danger-surface: var(--ilook-diff-remove) !important;
+  --color-background-danger-solid: var(--ilook-danger) !important;
+
+  /* 선·포인트 */
+  --color-border: var(--ilook-border-subtle) !important;
+  --color-border-subtle: var(--ilook-border-subtle) !important;
+  --app-color-border: var(--ilook-border-subtle) !important;
+  --app-color-border-light: var(--ilook-border-subtle) !important;
+  --color-border-button-outline: var(--ilook-border-strong) !important;
+  --color-border-strong: var(--ilook-border-strong) !important;
+  --color-border-primary-outline: var(--ilook-border-strong) !important;
+  --app-color-border-heavy: var(--ilook-border-strong) !important;
+  --color-ring: var(--ilook-accent) !important;
+  --app-color-border-focus: var(--ilook-accent) !important;
+  --color-blue: var(--ilook-accent) !important;
+  --app-color-accent-blue: var(--ilook-accent) !important;
+
+  /* Codex 코드 하이라이트 */
+  --color-codex-syntax-keyword: var(--ilook-syntax-keyword) !important;
+  --color-codex-syntax-string: var(--ilook-syntax-string) !important;
+  --color-codex-syntax-literal: var(--ilook-syntax-number) !important;
+  --color-codex-syntax-variable: var(--ilook-syntax-property) !important;
+  --color-codex-syntax-attribute: var(--ilook-syntax-property) !important;
+  --color-codex-syntax-name: var(--ilook-syntax-function) !important;
+  --color-codex-syntax-comment: var(--ilook-syntax-comment) !important;
+}
+
+/* 새 셸 사이드바는 본문과 같은 --color-* 토큰을 쓰므로 사이드바 전용 토큰으로 바꿔 끼운다 */
+html[data-ilook] .app-shell-left-panel {
+  --color-surface: var(--ilook-bg-sidebar) !important;
+  --color-surface-secondary: var(--ilook-bg-sidebar) !important;
+  --app-color-background-surface: var(--ilook-bg-sidebar) !important;
+  --color-text: var(--ilook-sidebar-text) !important;
+  --color-text-emphasis: var(--ilook-sidebar-text) !important;
+  --color-text-secondary: var(--ilook-sidebar-text) !important;
+  --color-text-tertiary: var(--ilook-sidebar-text-muted) !important;
+  --color-background-primary-ghost-hover: var(--ilook-sidebar-hover) !important;
+  --color-background-primary-soft: var(--ilook-sidebar-active) !important;
+  --color-background-secondary-soft: var(--ilook-sidebar-active) !important;
+  --color-border: var(--ilook-sidebar-border) !important;
+}
+
 /* 메뉴 항목은 .__menu-item에서 자체 변수를 선언한다 */
 html[data-ilook] .__menu-item {
   --menu-item-active: var(--ilook-bg-active) !important;
@@ -169,6 +296,11 @@ html[data-ilook] [class*='bg-[#131313]'] {
 
 html[data-ilook] [class*='text-[#8F8F8F]'] {
   color: var(--ilook-text-muted) !important;
+}
+
+/* 캔버스(글쓰기) 카드: dark:bg-[#2a2a2a]! 고정색. 글자는 --oai-wb-text-primary → 토큰이라 면만 바꾸면 된다 */
+html[data-ilook] [class*='bg-[#2a2a2a]'] {
+  background-image: linear-gradient(var(--ilook-bg-surface), var(--ilook-bg-surface)) !important;
 }
 
 /* 코드 블록: 하이라이트 색이 .light/.dark 범위별 하드코딩 rgb라 토큰으로 바꾼다 */
