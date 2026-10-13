@@ -3,7 +3,7 @@
     "message": "I Look"
   },
   "appDesc": {
-    "message": "Recolor ChatGPT and Claude the way you like. Pick a preset or choose two or three colors; readable text contrast is handled for you. Independent project, not affiliated with OpenAI or Anthropic."
+    "message": "Recolor ChatGPT and Claude. Pick a preset or two or three colors; readable text is automatic. Not affiliated with OpenAI/Anthropic."
   },
   "popup_enabled_title": {
     "message": "On / Off"
