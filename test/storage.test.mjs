@@ -10,7 +10,7 @@ test('siteKey: claude-code는 claude를 따른다', () => {
 
 test('기본값', () => {
   const s = withDefaults(null);
-  assert.deepEqual(s.activeTheme, { chatgpt: 'notion-blue-light', claude: 'notion-blue-light' });
+  assert.deepEqual(s.activeTheme, { chatgpt: 'mood-daybreak', claude: 'mood-daybreak' });
   assert.equal(s.lang, 'auto');
   assert.equal(s.lastSite, 'claude');
   assert.equal(s.enabled, true);
@@ -18,7 +18,7 @@ test('기본값', () => {
 });
 
 test('옛 저장값: perSite=false였으면 공통 테마를 양쪽에 복사한다', () => {
-  const s = withDefaults({ perSite: false, activeTheme: { chatgpt: 'notion-blue-light', claude: 'dracula', 'claude-code': 'dracula' } });
+  const s = withDefaults({ perSite: false, activeTheme: { chatgpt: 'mood-daybreak', claude: 'dracula', 'claude-code': 'dracula' } });
   assert.deepEqual(s.activeTheme, { chatgpt: 'dracula', claude: 'dracula' });
 });
 

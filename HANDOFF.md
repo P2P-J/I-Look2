@@ -75,7 +75,7 @@ Claude 문서 패널은 세 겹 iframe이다: `claude.ai/code/artifact/…` → 
 ## 남은 작업
 
 1. 팝업: 테마 내보내기·가져오기 (설정 화면에 한 줄 추가)
-2. 출시 전 상표 검토: 프리셋 시리즈 이름 "Notion", 스토어 설명의 "ChatGPT·Claude" 표기 (about.html에 출처·무관 고지는 있음)
+2. 출시 전 상표 검토 — 완료: Notion 시리즈는 Mood(Daybreak…Ember)로 개명, 설명에 무관 고지, 출처 페이지에 참고 표기
 3. 상위 폴더 `I-LOOK2/`의 10월 8일자 옛 빌드 파일 삭제
 4. ChatGPT 새 셸이 전면 배포되면 옛 셸 블록 제거 검토
 5. Claude Code 웹의 터미널 출력·diff 블록 (연결된 세션이 있어야 보임)
