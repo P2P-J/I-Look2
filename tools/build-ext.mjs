@@ -23,6 +23,7 @@ cpSync('src/popup/popup.css', `${out}/popup.css`);
 cpSync('src/static/about.html', `${out}/about.html`);
 cpSync('src/adapters', `${out}/adapters`, { recursive: true });
 cpSync('src/_locales', `${out}/_locales`, { recursive: true });
+cpSync('src/popup/fonts', `${out}/fonts`, { recursive: true });
 if (existsSync('src/icons')) cpSync('src/icons', `${out}/icons`, { recursive: true });
 
 let html = (await import('node:fs')).readFileSync(`${out}/popup.html`, 'utf8');

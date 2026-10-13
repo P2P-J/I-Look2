@@ -1,59 +1,179 @@
 {
-  "appName": { "message": "I Look" },
-  "appDesc": { "message": "Recolor ChatGPT and Claude the way you like. Pick a preset or choose two or three colors; readable text contrast is handled for you. Independent project, not affiliated with OpenAI or Anthropic." },
-
-  "popup_enabled_title": { "message": "On / Off" },
-  "popup_settings_title": { "message": "Settings" },
-  "popup_now_applied": { "message": "Applied to {site}" },
-  "popup_now_off": { "message": "Turned off" },
-  "popup_change_colors": { "message": "Change colors" },
-  "popup_filter_all": { "message": "All" },
-  "popup_filter_light": { "message": "Light" },
-  "popup_filter_dark": { "message": "Dark" },
-  "popup_filter_mine": { "message": "Mine" },
-  "popup_mine": { "message": "Mine" },
-  "popup_mine_empty": { "message": "No themes of your own yet. Press + to make one." },
-  "popup_hint_apply": { "message": "Tap a theme to apply it to {site}" },
-  "popup_new_theme": { "message": "+ New theme" },
-  "popup_edit": { "message": "Edit" },
-
-  "popup_back": { "message": "‹ Back" },
-  "popup_editor_title": { "message": "Change colors" },
-  "popup_theme_name_placeholder": { "message": "Theme name" },
-  "popup_default_theme_name": { "message": "My theme" },
-  "popup_variant_suffix": { "message": "{name} variant" },
-  "popup_seed_bg": { "message": "Background" },
-  "popup_seed_accent": { "message": "Accent" },
-  "popup_seed_sidebar": { "message": "Sidebar" },
-  "popup_sidebar_auto": { "message": "Derive from background" },
-  "popup_editor_hint": { "message": "Text, borders and code backgrounds are derived from these three colors." },
-  "popup_random": { "message": "🎲 Random" },
-  "popup_copy_code": { "message": "Copy code" },
-  "popup_copy_code_title": { "message": "Copy a share code for this theme" },
-  "popup_copied": { "message": "Copied" },
-  "popup_import_title": { "message": "Add a theme from a code" },
-  "popup_import_sub": { "message": "Paste a code someone shared with you" },
-  "popup_import_placeholder": { "message": "ilook1/…" },
-  "popup_import_add": { "message": "Add" },
-  "popup_import_invalid": { "message": "That code can't be read" },
-  "popup_import_done": { "message": "Added and applied to {site}" },
-  "popup_delete": { "message": "Delete" },
-  "popup_save": { "message": "Save" },
-  "popup_preview_hint": { "message": "Changes show live in open {site} tabs" },
-
-  "popup_settings": { "message": "Settings" },
-  "popup_lang": { "message": "Language" },
-  "popup_lang_sub": { "message": "언어" },
-  "popup_lang_auto": { "message": "Auto" },
-  "popup_same_theme": { "message": "Use the same theme on both sites" },
-  "popup_same_theme_sub": { "message": "Apply {site}'s {theme} to {other} too" },
-  "popup_apply": { "message": "Apply" },
-  "popup_applied_done": { "message": "Applied" },
-  "popup_sources": { "message": "Color sources" },
-  "popup_sources_sub": { "message": "Notion · Radix · Catppuccin · Nord · Rosé Pine · Dracula" },
-
-  "popup_note_bg_adjusted": { "message": "Background lightness adjusted so text stays readable" },
-  "popup_note_bg_saturated": { "message": "Highly saturated backgrounds can tire your eyes" },
-  "popup_note_accent_adjusted": { "message": "Accent lightness adjusted to stand out from the background" },
-  "popup_note_accent_text_adjusted": { "message": "Accent lightness adjusted so button text stays readable" }
+  "appName": {
+    "message": "I Look"
+  },
+  "appDesc": {
+    "message": "Recolor ChatGPT and Claude the way you like. Pick a preset or choose two or three colors; readable text contrast is handled for you. Independent project, not affiliated with OpenAI or Anthropic."
+  },
+  "popup_enabled_title": {
+    "message": "On / Off"
+  },
+  "popup_settings_title": {
+    "message": "Settings"
+  },
+  "popup_now_applied": {
+    "message": "Applied to {site}"
+  },
+  "popup_now_off": {
+    "message": "Turned off"
+  },
+  "popup_change_colors": {
+    "message": "Change colors"
+  },
+  "popup_filter_all": {
+    "message": "All"
+  },
+  "popup_filter_light": {
+    "message": "Light"
+  },
+  "popup_filter_dark": {
+    "message": "Dark"
+  },
+  "popup_filter_mine": {
+    "message": "Mine"
+  },
+  "popup_mine": {
+    "message": "Mine"
+  },
+  "popup_mine_empty": {
+    "message": "No themes of your own yet. Press + to make one."
+  },
+  "popup_hint_apply": {
+    "message": "Tap a theme to apply it to {site}"
+  },
+  "popup_new_theme": {
+    "message": "+ New theme"
+  },
+  "popup_edit": {
+    "message": "Edit"
+  },
+  "popup_back": {
+    "message": "‹ Back"
+  },
+  "popup_editor_title": {
+    "message": "Change colors"
+  },
+  "popup_theme_name_placeholder": {
+    "message": "Theme name"
+  },
+  "popup_default_theme_name": {
+    "message": "My theme"
+  },
+  "popup_variant_suffix": {
+    "message": "{name} variant"
+  },
+  "popup_seed_bg": {
+    "message": "Background"
+  },
+  "popup_seed_accent": {
+    "message": "Accent"
+  },
+  "popup_seed_sidebar": {
+    "message": "Sidebar"
+  },
+  "popup_sidebar_auto": {
+    "message": "Derive from background"
+  },
+  "popup_editor_hint": {
+    "message": "Text, borders and code backgrounds are derived from these three colors."
+  },
+  "popup_random": {
+    "message": "🎲 Random"
+  },
+  "popup_copy_code": {
+    "message": "Copy code"
+  },
+  "popup_copy_code_title": {
+    "message": "Copy a share code for this theme"
+  },
+  "popup_copied": {
+    "message": "Copied"
+  },
+  "popup_import_title": {
+    "message": "Add a theme from a code"
+  },
+  "popup_import_sub": {
+    "message": "Paste a code someone shared with you"
+  },
+  "popup_import_placeholder": {
+    "message": "ilook1/…"
+  },
+  "popup_import_add": {
+    "message": "Add"
+  },
+  "popup_import_invalid": {
+    "message": "That code can't be read"
+  },
+  "popup_import_done": {
+    "message": "Added and applied to {site}"
+  },
+  "popup_delete": {
+    "message": "Delete"
+  },
+  "popup_save": {
+    "message": "Save"
+  },
+  "popup_settings": {
+    "message": "Settings"
+  },
+  "popup_lang": {
+    "message": "Language"
+  },
+  "popup_lang_sub": {
+    "message": "언어"
+  },
+  "popup_lang_auto": {
+    "message": "Auto"
+  },
+  "popup_same_theme": {
+    "message": "Use the same theme on both sites"
+  },
+  "popup_same_theme_sub": {
+    "message": "Apply {site}'s {theme} to {other} too"
+  },
+  "popup_apply": {
+    "message": "Apply"
+  },
+  "popup_applied_done": {
+    "message": "Applied"
+  },
+  "popup_sources": {
+    "message": "Color sources"
+  },
+  "popup_sources_sub": {
+    "message": "Notion · Radix · Catppuccin · Nord · Rosé Pine · Dracula"
+  },
+  "popup_note_bg_adjusted": {
+    "message": "Background lightness adjusted so text stays readable"
+  },
+  "popup_note_bg_saturated": {
+    "message": "Highly saturated backgrounds can tire your eyes"
+  },
+  "popup_note_accent_adjusted": {
+    "message": "Accent lightness adjusted to stand out from the background"
+  },
+  "popup_note_accent_text_adjusted": {
+    "message": "Accent lightness adjusted so button text stays readable"
+  },
+  "popup_tag_light": {
+    "message": "LIGHT"
+  },
+  "popup_tag_dark": {
+    "message": "DARK"
+  },
+  "popup_auto": {
+    "message": "auto"
+  },
+  "popup_section_themes": {
+    "message": "Themes"
+  },
+  "popup_count": {
+    "message": "{presets} presets · {mine} mine"
+  },
+  "popup_live": {
+    "message": "LIVE PREVIEW"
+  },
+  "popup_preview": {
+    "message": "PREVIEW"
+  }
 }

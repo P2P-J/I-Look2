@@ -52,7 +52,6 @@ async function switchSite(next) {
 function openEditor(theme, isNew) {
   editing = { id: isNew ? newCustomId() : theme.id, name: theme.name, seeds: { ...theme.seeds }, isNew };
   renderEditor(editing, t);
-  $('#preview-hint').textContent = t('popup_preview_hint', { site: SITE_NAME[site] });
   show('edit');
   $('#theme-name').focus();
   schedulePreview();
@@ -119,25 +118,11 @@ async function backToList() {
   show('list');
 }
 
-/* 설정 */
-function openSettings() {
-  renderSettings(settings, site, current(), t);
-  show('settings');
-}
-
-async function setLang(lang) {
-  settings = await saveSettings({ lang });
-  await applyLang();
-  renderSettings(settings, site, current(), t);
-}
-
 /* 공유 코드 */
-async function copyCode() {
-  const code = encodeTheme({ name: $('#theme-name').value.trim() || editing.name, seeds: editing.seeds });
-  try { await navigator.clipboard.writeText(code); } catch (e) {}
-  const b = $('#copy-code');
-  b.textContent = t('popup_copied');
-  setTimeout(() => { b.textContent = t('popup_copy_code'); }, 1500);
+async function copyCode(theme, btn) {
+  try { await navigator.clipboard.writeText(encodeTheme(theme)); } catch (e) {}
+  btn.textContent = t('popup_copied');
+  setTimeout(() => { btn.textContent = t('popup_copy_code'); }, 1500);
 }
 
 async function importCode() {
@@ -155,6 +140,18 @@ async function importCode() {
   sub.classList.remove('is-error');
   sub.textContent = t('popup_import_done', { site: SITE_NAME[site] });
   filter = 'mine';
+}
+
+/* 설정 */
+function openSettings() {
+  renderSettings(settings, site, current(), t);
+  show('settings');
+}
+
+async function setLang(lang) {
+  settings = await saveSettings({ lang });
+  await applyLang();
+  renderSettings(settings, site, current(), t);
 }
 
 async function copyToOther() {
@@ -181,6 +178,7 @@ function bind() {
   });
   $('#open-settings').addEventListener('click', openSettings);
   $('#change-colors').addEventListener('click', changeColors);
+  $('#copy-code-now').addEventListener('click', (e) => copyCode(current(), e.currentTarget));
   document.querySelectorAll('.chip').forEach((c) =>
     c.addEventListener('click', () => {
       filter = c.dataset.filter;
@@ -215,6 +213,7 @@ function bind() {
     renderEditor(editing, t);
     schedulePreview();
   });
+  $('#copy-code').addEventListener('click', (e) => copyCode({ name: $('#theme-name').value.trim() || editing.name, seeds: editing.seeds }, e.currentTarget));
   $('#save-custom').addEventListener('click', saveCustom);
   $('#delete-custom').addEventListener('click', deleteCustom);
 
@@ -224,7 +223,6 @@ function bind() {
   });
   document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
   $('#same-theme-apply').addEventListener('click', copyToOther);
-  $('#copy-code').addEventListener('click', copyCode);
   $('#import-add').addEventListener('click', importCode);
   $('#import-code').addEventListener('keydown', (e) => { if (e.key === 'Enter') importCode(); });
   $('#import-code').addEventListener('input', () => { $('#import-sub').classList.remove('is-error'); $('#import-sub').textContent = t('popup_import_sub'); });

@@ -7,8 +7,11 @@
 </head>
 <body>
   <header class="top">
-    <img class="logo" src="icons/48.png" alt="" width="22" height="22" />
-    <div class="tabs" role="tablist">
+    <div class="mark">
+      <img class="logo" src="icons/48.png" alt="" width="26" height="26" />
+      <div><b class="disp">I LOOK</b><small class="disp">THEME CONSOLE</small></div>
+    </div>
+    <div class="seg tabs" role="tablist">
       <button type="button" class="tab" data-site="claude" role="tab">Claude</button>
       <button type="button" class="tab" data-site="chatgpt" role="tab">ChatGPT</button>
     </div>
@@ -20,15 +23,30 @@
   </header>
 
   <section id="view-list" class="view">
-    <div class="now">
-      <div class="now-mini" id="now-mini"></div>
-      <div class="now-text">
+    <div class="win now">
+      <div class="win-t">
         <b id="now-name"></b>
-        <small id="now-sub"></small>
+        <span class="tag" id="now-mode"></span>
+        <span class="tag acc" id="now-series"></span>
+        <span class="spacer"></span>
+        <span class="tag live" id="now-sub"></span>
       </div>
-      <button type="button" class="btn" id="change-colors" data-i18n="popup_change_colors"></button>
+      <div class="win-b">
+        <div class="cell" id="now-mini"></div>
+        <div class="stats mono" id="now-stats"></div>
+      </div>
+      <div class="win-f">
+        <button type="button" class="btn" id="change-colors" data-i18n="popup_change_colors"></button>
+        <button type="button" class="btn ghost" id="copy-code-now" data-i18n="popup_copy_code"></button>
+      </div>
     </div>
-    <div class="chips" role="tablist">
+
+    <div class="sec">
+      <b data-i18n="popup_section_themes"></b>
+      <span class="n disp" id="sec-count"></span>
+      <span class="r" id="sec-hint"></span>
+    </div>
+    <div class="seg filters" role="tablist">
       <button type="button" class="chip is-on" data-filter="all" data-i18n="popup_filter_all"></button>
       <button type="button" class="chip" data-filter="light" data-i18n="popup_filter_light"></button>
       <button type="button" class="chip" data-filter="dark" data-i18n="popup_filter_dark"></button>
@@ -39,7 +57,7 @@
       <p class="empty" id="mine-empty" hidden data-i18n="popup_mine_empty"></p>
     </div>
     <footer class="foot">
-      <span id="foot-hint"></span>
+      <span class="mono" id="foot-count"></span>
       <button type="button" class="btn primary" id="new-theme" data-i18n="popup_new_theme"></button>
     </footer>
   </section>
@@ -48,31 +66,33 @@
     <div class="subhead">
       <button type="button" class="btn ghost" id="back-edit" data-i18n="popup_back"></button>
       <h2 data-i18n="popup_editor_title"></h2>
+      <span class="spacer"></span>
+      <span class="tag live" data-i18n="popup_live"></span>
     </div>
     <div class="scroll pad">
       <input id="theme-name" class="name" maxlength="24" data-i18n-placeholder="popup_theme_name_placeholder" />
-      <div id="edit-preview"></div>
-      <div class="seeds">
-        <label class="seed">
-          <span data-i18n="popup_seed_bg"></span>
+      <div class="win">
+        <div class="win-t"><b class="mono dim" data-i18n="popup_preview"></b><span class="spacer"></span><span class="tag" id="edit-mode"></span></div>
+        <div class="win-p"><div class="cell big" id="edit-preview"></div></div>
+        <label class="field">
+          <span>BG</span>
           <input type="color" id="seed-bg" />
           <input type="text" id="seed-bg-hex" class="hex" maxlength="7" spellcheck="false" />
         </label>
-        <label class="seed">
-          <span data-i18n="popup_seed_accent"></span>
+        <label class="field">
+          <span>ACCENT</span>
           <input type="color" id="seed-accent" />
           <input type="text" id="seed-accent-hex" class="hex" maxlength="7" spellcheck="false" />
         </label>
-        <label class="seed">
-          <span data-i18n="popup_seed_sidebar"></span>
+        <label class="field">
+          <span>SIDEBAR</span>
           <input type="color" id="seed-sidebar" />
           <input type="text" id="seed-sidebar-hex" class="hex" maxlength="7" spellcheck="false" />
         </label>
         <label class="auto"><input type="checkbox" id="sidebar-auto" /> <span data-i18n="popup_sidebar_auto"></span></label>
       </div>
-      <p class="hint" data-i18n="popup_editor_hint"></p>
-      <p class="hint" id="preview-hint"></p>
       <ul class="notes" id="notes"></ul>
+      <p class="hint" data-i18n="popup_editor_hint"></p>
     </div>
     <footer class="foot actions">
       <button type="button" class="btn ghost" id="dice" data-i18n="popup_random"></button>
@@ -88,31 +108,31 @@
       <button type="button" class="btn ghost" id="back-settings" data-i18n="popup_back"></button>
       <h2 data-i18n="popup_settings"></h2>
     </div>
-    <div class="scroll pad">
-      <div class="item">
-        <div><span data-i18n="popup_lang"></span><small data-i18n="popup_lang_sub"></small></div>
+    <div class="scroll pad set">
+      <div class="item rail-acc">
+        <div><b data-i18n="popup_lang"></b><small data-i18n="popup_lang_sub"></small></div>
         <div class="seg" role="radiogroup">
           <button type="button" data-lang="auto" data-i18n="popup_lang_auto"></button>
           <button type="button" data-lang="ko">한국어</button>
           <button type="button" data-lang="en">English</button>
         </div>
       </div>
-      <div class="item">
-        <div><span data-i18n="popup_same_theme"></span><small id="same-theme-sub"></small></div>
+      <div class="item rail-live">
+        <div><b data-i18n="popup_same_theme"></b><small id="same-theme-sub"></small></div>
         <button type="button" class="btn" id="same-theme-apply" data-i18n="popup_apply"></button>
       </div>
-      <div class="item col">
-        <div><span data-i18n="popup_import_title"></span><small id="import-sub" data-i18n="popup_import_sub"></small></div>
+      <div class="item rail-warn col">
+        <div><b data-i18n="popup_import_title"></b><small id="import-sub" data-i18n="popup_import_sub"></small></div>
         <div class="import-row">
           <input id="import-code" class="hex" spellcheck="false" autocomplete="off" data-i18n-placeholder="popup_import_placeholder" />
-          <button type="button" class="btn" id="import-add" data-i18n="popup_import_add"></button>
+          <button type="button" class="btn primary" id="import-add" data-i18n="popup_import_add"></button>
         </div>
       </div>
       <a class="item link" href="#" id="sources">
-        <div><span data-i18n="popup_sources"></span><small data-i18n="popup_sources_sub"></small></div>
-        <span>›</span>
+        <div><b data-i18n="popup_sources"></b><small data-i18n="popup_sources_sub"></small></div>
+        <span class="chev">›</span>
       </a>
-      <p class="version" id="version"></p>
+      <p class="version disp" id="version"></p>
     </div>
   </section>
 
