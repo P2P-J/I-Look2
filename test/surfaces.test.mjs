@@ -23,6 +23,7 @@ for (const [name, seeds] of SEEDS) {
       assert.ok(contrastHex(t['text-muted'], t[s]) >= CONTRAST.muted.min, `text-muted on ${s}: ${contrastHex(t['text-muted'], t[s]).toFixed(2)}`);
       assert.ok(contrastHex(t['text-secondary'], t[s]) >= CONTRAST.secondary.min, `text-secondary on ${s}: ${contrastHex(t['text-secondary'], t[s]).toFixed(2)}`);
       assert.ok(contrastHex(t['text-link'], t[s]) >= 4.5, `text-link on ${s}: ${contrastHex(t['text-link'], t[s]).toFixed(2)}`);
+      assert.ok(contrastHex(t['text-link-hover'], t[s]) >= 4.5, `text-link-hover on ${s}: ${contrastHex(t['text-link-hover'], t[s]).toFixed(2)}`);
     }
     for (const s of ['bg-sidebar', 'sidebar-hover', 'sidebar-active']) {
       assert.ok(contrastHex(t['sidebar-text-muted'], t[s]) >= CONTRAST.muted.min, `sidebar-text-muted on ${s}: ${contrastHex(t['sidebar-text-muted'], t[s]).toFixed(2)}`);
@@ -32,5 +33,6 @@ for (const [name, seeds] of SEEDS) {
       assert.ok(contrastHex(t[k], t['bg-code']) >= 4.5, `${k} on bg-code: ${contrastHex(t[k], t['bg-code']).toFixed(2)}`);
     }
     assert.ok(contrastHex(t['syntax-comment'], t['bg-code']) >= 3, 'syntax-comment on bg-code');
+    assert.ok(contrastHex(t['text-on-accent'], t['accent-hover']) >= 4.5, `text-on-accent on accent-hover: ${contrastHex(t['text-on-accent'], t['accent-hover']).toFixed(2)}`);
   });
 }

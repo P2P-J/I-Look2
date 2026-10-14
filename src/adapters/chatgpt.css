@@ -64,7 +64,7 @@ html[data-ilook] [data-chat-theme] {
   --text-status-warning: var(--ilook-warning) !important;
   --text-status-success: var(--ilook-success) !important;
   --link: var(--ilook-text-link) !important;
-  --link-hover: var(--ilook-accent-hover) !important;
+  --link-hover: var(--ilook-text-link-hover) !important;
   --icon-primary: var(--ilook-text-primary) !important;
   --icon-secondary: var(--ilook-text-secondary) !important;
   --icon-tertiary: var(--ilook-text-muted) !important;

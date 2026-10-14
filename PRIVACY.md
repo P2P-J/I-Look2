@@ -1,6 +1,6 @@
 # I Look 개인정보처리방침 · Privacy Policy
 
-최종 수정 · Last updated: 2026-10-14
+최종 수정 · Last updated: 2026-10-15
 
 ## 한국어
 
@@ -20,7 +20,6 @@ I Look은 ChatGPT와 Claude 웹 화면의 색을 바꾸는 크롬 확장 프로�
 **권한 사용 목적**
 
 - `storage`: 위의 설정 저장
-- `scripting`, `webNavigation`: Claude의 문서(아티팩트) 패널은 일반 콘텐츠 스크립트가 닿지 않는 샌드박스 프레임 안에 있어, 그 프레임이 열리는 순간을 감지해 테마 CSS를 넣기 위해 사용합니다. 다른 사이트의 탐색 정보는 무시하며 기록하지 않습니다.
 - 호스트 권한(chatgpt.com, claude.ai, *.claudeusercontent.com): 이 사이트에 테마 CSS를 적용하기 위해서만 사용합니다. 페이지 내용을 읽거나 전송하지 않습니다.
 
 **문의**: olnn712@gmail.com
@@ -45,7 +44,6 @@ I Look is a Chrome extension that changes the colors of the ChatGPT and Claude w
 **How permissions are used**
 
 - `storage`: saving the settings above.
-- `scripting`, `webNavigation`: Claude's document (artifact) panel lives in a sandboxed frame that ordinary content scripts cannot reach. These permissions are used only to detect when that frame opens and inject the theme CSS into it. Navigation on any other site is ignored and never recorded.
 - Host permissions (chatgpt.com, claude.ai, *.claudeusercontent.com): used solely to apply the theme CSS on these sites. Page content is never read or transmitted.
 
 **Contact**: olnn712@gmail.com

@@ -175,5 +175,14 @@
   },
   "popup_preview": {
     "message": "PREVIEW"
+  },
+  "popup_copy_failed": {
+    "message": "복사 실패"
+  },
+  "popup_limit_reached": {
+    "message": "내 테마는 {max}개까지 저장할 수 있어요. 안 쓰는 테마를 지운 뒤 다시 시도해 주세요."
+  },
+  "popup_save_failed": {
+    "message": "저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."
   }
 }

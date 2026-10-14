@@ -17,7 +17,7 @@ import {
 
 export const TOKEN_NAMES = [
   'bg-app', 'bg-sidebar', 'bg-surface', 'bg-elevated', 'bg-user-msg', 'bg-code', 'bg-inline-code', 'bg-hover', 'bg-active', 'overlay-dim',
-  'text-primary', 'text-heading', 'text-secondary', 'text-muted', 'text-link', 'text-on-accent', 'text-on-user-msg',
+  'text-primary', 'text-heading', 'text-secondary', 'text-muted', 'text-link', 'text-link-hover', 'text-on-accent', 'text-on-user-msg',
   'border-subtle', 'border-strong', 'focus-ring',
   'accent', 'accent-hover', 'accent-soft',
   'danger', 'warning', 'success',
@@ -169,7 +169,9 @@ export function derive(seeds) {
     }
     if (Math.abs(hexToOklch(accent).L - hexToOklch(seeds.accent).L) > 0.04) notes.push('accent-text-adjusted');
   }
-  const accentHover = shiftL(accent, isLight(accent) ? -0.06 : 0.06);
+  // hover는 버튼 글자(text-on-accent)에서 멀어지는 쪽으로 움직여야 대비가 유지된다
+  const awayFromText = textOnAccent === '#ffffff' ? -0.06 : 0.06;
+  const accentHover = ensureContrast(shiftL(accent, awayFromText), textOnAccent, 4.5, { direction: awayFromText < 0 ? 'darker' : 'lighter' });
   const accentSoft = mix(bg, seeds.accent, 0.2);
   let textLink = targetContrast(seeds.accent, bg, 4.5, 4.5);
 
@@ -198,6 +200,8 @@ export function derive(seeds) {
   textSecondary = onAllSurfaces(textSecondary, CONTRAST.secondary.min);
   textMuted = onAllSurfaces(textMuted, CONTRAST.muted.min);
   textLink = onAllSurfaces(textLink, 4.5);
+  // 링크 hover 글자: 배경에서 더 멀어지는 쪽으로 한 단계, 모든 면 위 4.5:1
+  const textLinkHover = onAllSurfaces(ensureContrast(shiftL(textLink, light ? -0.06 : 0.06), bg, 4.5), 4.5);
 
   const borderSubtle = raise(bg, textPrimary, 0.12, LAYER.borderSubtle, light);
   const borderStrong = raise(bg, textPrimary, 0.25, LAYER.borderStrong, light);
@@ -222,6 +226,7 @@ export function derive(seeds) {
     'text-secondary': textSecondary,
     'text-muted': textMuted,
     'text-link': textLink,
+    'text-link-hover': textLinkHover,
     'text-on-accent': textOnAccent,
     'text-on-user-msg': textOnUserMsg,
     'border-subtle': borderSubtle,

@@ -181,3 +181,4 @@ button:focus-visible, input:focus-visible, a:focus-visible, .switch input:focus-
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+.notes li.is-error { color: var(--c-bad); border-color: var(--c-bad); background: transparent; }

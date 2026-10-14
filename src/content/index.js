@@ -1,7 +1,7 @@
 import { buildCss, detectSite, injectCss, readCache, removeCss, writeCache } from './apply.js';
 import { loadSettings, onSettingsChanged, resolveSeeds } from '../storage.js';
 
-// 같은 프레임에 두 번 주입돼도(manifest + 백그라운드 scripting) 한 번만 부팅한다
+// 같은 프레임에 두 번 주입돼도(확장 재로드, 겹치는 content_scripts 항목) 한 번만 부팅한다
 if (window.__ilookBooted) {
   console.debug('[ilook] already booted');
 } else {

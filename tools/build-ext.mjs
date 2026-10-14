@@ -17,7 +17,6 @@ await build({
 });
 
 cpSync('src/manifest.json', `${out}/manifest.json`);
-cpSync('src/background.js', `${out}/background.js`);
 cpSync('src/popup/popup.html', `${out}/popup.html`);
 cpSync('src/popup/popup.css', `${out}/popup.css`);
 cpSync('src/static/about.html', `${out}/about.html`);

@@ -74,11 +74,15 @@ export function loadSettings({ migrate = false } = {}) {
   });
 }
 
+// 쓰기가 실패하면(용량·쓰기 한도) reject한다. 조용히 넘어가면 화면엔 저장된 것처럼 보이다 사라진다.
 export function saveSettings(patch) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     chrome.storage.sync.get(null, (raw) => {
       const next = withDefaults({ ...withDefaults(raw), ...patch });
-      chrome.storage.sync.set(next, () => resolve(next));
+      chrome.storage.sync.set(next, () => {
+        if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
+        else resolve(next);
+      });
     });
   });
 }
@@ -93,6 +97,9 @@ export function onSettingsChanged(cb) {
     loadSettings().then(cb);
   });
 }
+
+// storage.sync는 항목 하나에 8KB까지다. 이름이 한글 24자면 테마 하나가 약 170바이트라 40개면 여유가 있다.
+export const MAX_CUSTOM_THEMES = 40;
 
 export function newCustomId() {
   return 'custom-' + Math.random().toString(36).slice(2, 8);

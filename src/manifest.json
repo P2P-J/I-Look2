@@ -4,34 +4,65 @@
   "version": "0.1.0",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
-  "permissions": ["storage", "scripting", "webNavigation"],
-  "background": { "service_worker": "background.js" },
-  "host_permissions": ["https://chatgpt.com/*", "https://claude.ai/*", "https://*.claudeusercontent.com/*"],
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://*.claudeusercontent.com/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_title": "I Look"
   },
   "content_scripts": [
     {
-      "matches": ["https://chatgpt.com/*"],
-      "js": ["content.js"],
-      "css": ["adapters/chatgpt.css", "adapters/syntax.css"],
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "adapters/chatgpt.css",
+        "adapters/syntax.css"
+      ],
       "run_at": "document_start"
     },
     {
-      "matches": ["https://claude.ai/*"],
-      "js": ["content.js"],
-      "css": ["adapters/claude.css", "adapters/syntax.css"],
+      "matches": [
+        "https://claude.ai/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "adapters/claude.css",
+        "adapters/syntax.css"
+      ],
       "run_at": "document_start",
       "all_frames": true
     },
     {
-      "matches": ["https://*.claudeusercontent.com/*"],
-      "js": ["content.js"],
-      "css": ["adapters/claude.css", "adapters/syntax.css"],
+      "matches": [
+        "https://*.claudeusercontent.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "adapters/claude.css",
+        "adapters/syntax.css"
+      ],
       "run_at": "document_start",
-      "all_frames": true
+      "all_frames": true,
+      "match_origin_as_fallback": true
     }
   ],
-  "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" }
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
 }

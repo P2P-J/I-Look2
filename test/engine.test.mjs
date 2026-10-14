@@ -67,6 +67,8 @@ for (const [name, seeds] of EXTREME_SEEDS) {
     assert.ok(contrastHex(tokens['text-link'], bg) >= 4.5, 'text-link');
     assert.ok(contrastHex(tokens['accent'], bg) >= 3, 'accent vs bg');
     assert.ok(contrastHex(tokens['text-on-accent'], tokens['accent']) >= 4.5, 'text-on-accent');
+    assert.ok(contrastHex(tokens['text-on-accent'], tokens['accent-hover']) >= 4.5, 'text-on-accent on accent-hover');
+    assert.ok(contrastHex(tokens['text-link-hover'], bg) >= 4.5, 'text-link-hover');
     assert.ok(contrastHex(tokens['text-on-user-msg'], tokens['bg-user-msg']) >= CONTRAST.body.min, 'text-on-user-msg');
     assert.ok(contrastHex(tokens['sidebar-text'], tokens['bg-sidebar']) >= CONTRAST.body.min, 'sidebar-text');
     assert.ok(contrastHex(tokens['sidebar-text-muted'], tokens['bg-sidebar']) >= CONTRAST.muted.min, 'sidebar-text-muted');

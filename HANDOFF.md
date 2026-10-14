@@ -7,9 +7,9 @@ ChatGPT·Claude 화면 색을 바꾸는 크롬 확장. 이 문서는 "지금 어
 
 | 영역 | 상태 | 위치 |
 | --- | --- | --- |
-| 색 엔진 (시드 3색 → 토큰 48개, 모든 면 위 대비 보장) | 완성, 테스트 통과 | `src/engine/` |
+| 색 엔진 (시드 3색 → 토큰 49개, 모든 면 위 대비 보장) | 완성, 테스트 통과 | `src/engine/` |
 | 추천 테마 24개 시드 | 완성 | `src/themes/presets.js` |
-| 콘텐츠 스크립트 (캐시 선주입, storage 동기화, 미리보기, 프레임 주입) | 완성, 실기기 검증 (번쩍임 0, 캐시 복구) | `src/content/`, `src/background.js` |
+| 콘텐츠 스크립트 (캐시 선주입, storage 동기화, 미리보기, 프레임 주입) | 완성, 실기기 검증 (번쩍임 0, 캐시 복구) | `src/content/` |
 | 팝업 (사이트 탭, 현재 상태, 목록·편집·설정, 언어 ko/en, 테마 공유 코드) | 완성 | `src/popup/` (`popup.js` 상태 / `views.js` 렌더 / `i18n.js` 문자열) |
 | 사이트 어댑터 CSS | **실측 기반 완성** (아래 "구역" 참고) | `src/adapters/` |
 | 빌드 | esbuild, `npm run build` → `dist/extension` | `tools/build-ext.mjs` |
@@ -38,7 +38,7 @@ npm run build
 ### 프레임 주입 (Claude 문서·아티팩트)
 
 Claude 문서 패널은 세 겹 iframe이다: `claude.ai/code/artifact/…` → `*.frame.claudeusercontent.com` → `sandbox="allow-scripts"` srcdoc.
-앞 두 겹은 manifest `all_frames`로 들어가고, origin이 `null`인 srcdoc은 content_scripts로 안 들어가서 `background.js`가 `webNavigation.onCommitted`에서 `scripting` API로 직접 넣는다. 프레임 안에서는 `document.baseURI`로 사이트를 판별한다.
+앞 두 겹은 manifest `all_frames`로 들어간다. origin이 `null`인 srcdoc은 `*.claudeusercontent.com` 항목의 `match_origin_as_fallback: true`로 들어간다 (그 프레임을 만든 문서의 origin으로 매칭). 2026-10-15 Chrome 154에서 플래그 유무 대조 실험으로 확인했고, 그 전에 쓰던 백그라운드 주입과 `scripting`·`webNavigation` 권한은 지웠다. 프레임 안에서는 `location.ancestorOrigins[0]`(페이지가 바꿀 수 없음)으로 사이트를 판별한다.
 
 ## 사이트별 구역 → 변수 (실측 확정)
 

@@ -175,5 +175,14 @@
   },
   "popup_preview": {
     "message": "PREVIEW"
+  },
+  "popup_copy_failed": {
+    "message": "Copy failed"
+  },
+  "popup_limit_reached": {
+    "message": "You can save up to {max} themes. Delete one you no longer use and try again."
+  },
+  "popup_save_failed": {
+    "message": "Could not save. Please try again in a moment."
   }
 }

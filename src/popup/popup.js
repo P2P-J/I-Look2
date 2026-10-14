@@ -1,6 +1,6 @@
 import { oklchToHex } from '../engine/color.js';
 import { PRESETS } from '../themes/presets.js';
-import { loadSettings, saveSettings, resolveSeeds, newCustomId, siteKey, otherSite } from '../storage.js';
+import { loadSettings, saveSettings, resolveSeeds, newCustomId, siteKey, otherSite, MAX_CUSTOM_THEMES } from '../storage.js';
 import { detectSite as detectSiteOf } from '../content/apply.js';
 import * as i18n from './i18n.js';
 import { encodeTheme, decodeTheme } from './share.js';
@@ -92,8 +92,15 @@ async function sendToTabs(msg) {
   } catch (e) {}
 }
 
-function setSeed(key, hex) {
-  if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
+// hex 입력은 '#' 없이 넣어도 받는다 (ff0000 → #ff0000)
+function normalizeHex(v) {
+  const s = String(v || '').trim();
+  return /^#?[0-9a-f]{6}$/i.test(s) ? (s.startsWith('#') ? s : '#' + s) : null;
+}
+
+function setSeed(key, value) {
+  const hex = normalizeHex(value);
+  if (!hex) return;
   editing.seeds[key] = hex.toLowerCase();
   renderEditor(editing, t);
   schedulePreview();
@@ -109,14 +116,32 @@ function randomSeeds() {
   return { bg, accent };
 }
 
+function showEditorError(msg) {
+  const li = document.createElement('li');
+  li.className = 'is-error';
+  li.textContent = msg;
+  $('#notes').appendChild(li);
+}
+
 async function saveCustom() {
   const name = $('#theme-name').value.trim() || t('popup_default_theme_name');
   const list = (settings.customThemes || []).filter((x) => x.id !== editing.id);
+  if (editing.isNew && list.length >= MAX_CUSTOM_THEMES) {
+    showEditorError(t('popup_limit_reached', { max: MAX_CUSTOM_THEMES }));
+    return;
+  }
   list.push({ id: editing.id, name, seeds: editing.seeds });
-  settings = await saveSettings({ customThemes: list });
+  // 테마 목록과 활성 테마를 한 번에 쓴 다음 미리보기를 끝낸다.
+  // 순서가 반대면 탭이 이전 테마를 한 번 칠한 뒤 새 테마로 바뀐다.
+  try {
+    settings = await saveSettings({ customThemes: list, activeTheme: { ...settings.activeTheme, [siteKey(site)]: editing.id }, enabled: true });
+  } catch (e) {
+    showEditorError(t('popup_save_failed'));
+    return;
+  }
   endPreviewSession();
   filter = 'mine';
-  await activate(editing.id);
+  renderList();
   show('list');
 }
 
@@ -138,8 +163,9 @@ function backToList() {
 
 /* 공유 코드 */
 async function copyCode(theme, btn) {
-  try { await navigator.clipboard.writeText(encodeTheme(theme)); } catch (e) {}
-  btn.textContent = t('popup_copied');
+  let ok = true;
+  try { await navigator.clipboard.writeText(encodeTheme(theme)); } catch (e) { ok = false; }
+  btn.textContent = t(ok ? 'popup_copied' : 'popup_copy_failed');
   setTimeout(() => { btn.textContent = t('popup_copy_code'); }, 1500);
 }
 
@@ -152,15 +178,24 @@ async function importCode() {
     sub.classList.add('is-error');
     return;
   }
+  if ((settings.customThemes || []).length >= MAX_CUSTOM_THEMES) {
+    sub.textContent = t('popup_limit_reached', { max: MAX_CUSTOM_THEMES });
+    sub.classList.add('is-error');
+    return;
+  }
   importing = true;
   try {
-    const list = [...(settings.customThemes || []), { id: newCustomId(), ...theme }];
-    settings = await saveSettings({ customThemes: list });
+    const id = newCustomId();
+    const list = [...(settings.customThemes || []), { id, ...theme }];
+    settings = await saveSettings({ customThemes: list, activeTheme: { ...settings.activeTheme, [siteKey(site)]: id }, enabled: true });
     filter = 'mine';
-    await activate(list[list.length - 1].id);
+    renderList();
     $('#import-code').value = '';
     sub.classList.remove('is-error');
     sub.textContent = t('popup_import_done', { site: SITE_NAME[site] });
+  } catch (e) {
+    sub.textContent = t('popup_save_failed');
+    sub.classList.add('is-error');
   } finally {
     importing = false;
   }
@@ -222,6 +257,8 @@ function bind() {
   $('#new-theme').addEventListener('click', () => openEditor({ name: t('popup_default_theme_name'), seeds: { ...current().seeds } }, true));
 
   $('#back-edit').addEventListener('click', backToList);
+  // 색을 바꾸면 편집 화면을 다시 그리므로, 입력한 이름을 editing에 먼저 담아 둔다
+  $('#theme-name').addEventListener('input', (e) => { editing.name = e.target.value; });
   for (const key of ['bg', 'accent', 'sidebar']) {
     $(`#seed-${key}`).addEventListener('input', (e) => setSeed(key, e.target.value));
     $(`#seed-${key}-hex`).addEventListener('change', (e) => setSeed(key, e.target.value.trim()));
