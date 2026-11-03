@@ -5,7 +5,7 @@ import { derive, CONTRAST } from '../src/engine/derive.js';
 import { PRESETS } from '../src/themes/presets.js';
 
 // 글자 토큰은 bg-app뿐 아니라 글자가 실제로 놓이는 모든 면 위에서 대비를 지켜야 한다.
-const SURFACES = ['bg-app', 'bg-sidebar', 'bg-surface', 'bg-elevated', 'bg-hover', 'bg-active', 'bg-user-msg', 'bg-code', 'bg-inline-code'];
+const SURFACES = ['bg-app', 'bg-sidebar', 'bg-surface', 'bg-elevated', 'bg-hover', 'bg-active', 'bg-user-msg', 'bg-code', 'bg-inline-code', 'accent-soft'];
 const SEEDS = [
   ...PRESETS.map((p) => [p.name, p.seeds]),
   ['순백', { bg: '#ffffff', accent: '#2e7cd1' }],

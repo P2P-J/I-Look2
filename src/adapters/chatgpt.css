@@ -246,6 +246,33 @@ html[data-ilook] .puik-root {
   --color-blue: var(--ilook-accent) !important;
   --app-color-accent-blue: var(--ilook-accent) !important;
 
+  /* 포인트 면 (헤더 업그레이드 버튼 .HeaderOffer, 사이드바 업그레이드, 정보 칩).
+     사이트 팔레트가 다크 모드 남색(#133463)으로 고정돼 있어 라이트 테마에서 튀었다 (2026-11-03 실측) */
+  --app-color-background-accent: var(--ilook-accent-soft) !important;
+  --app-color-background-accent-hover: var(--ilook-accent-soft) !important;
+  --app-color-background-accent-active: var(--ilook-accent-soft) !important;
+  --app-color-icon-accent: var(--ilook-text-link) !important;
+  --upgrade-promotion-foreground: var(--ilook-text-link) !important;
+  --color-background-info-soft: var(--ilook-accent-soft) !important;
+  --color-background-info-soft-hover: var(--ilook-accent-soft) !important;
+  --color-background-info-soft-active: var(--ilook-accent-soft) !important;
+  --color-background-info-soft-alpha: var(--ilook-accent-soft) !important;
+  --color-background-info-soft-alpha-hover: var(--ilook-accent-soft) !important;
+  --color-background-info-soft-alpha-active: var(--ilook-accent-soft) !important;
+  --color-codex-drop-overlay: var(--ilook-accent-soft) !important;
+  --color-text-composer-reference: var(--ilook-text-link) !important;
+
+  /* 전송 버튼 글자(.composer가 --messaging-send-*로 다시 선언), 포인트 위 글자 */
+  --messaging-send-background: var(--ilook-accent) !important;
+  --messaging-send-foreground: var(--ilook-text-on-accent) !important;
+  --color-text-composer-primary: var(--ilook-text-on-accent) !important;
+  --app-color-text-on-accent: var(--ilook-text-on-accent) !important;
+
+  /* 모드 고정값이 남아 있던 것: 보조 글자(#cdcdcd), 앱 메뉴(#1b1b1b), 컨트롤(#303030) */
+  --app-color-text-secondary: var(--ilook-text-secondary) !important;
+  --app-color-background-application-menu: var(--ilook-bg-elevated) !important;
+  --color-background-control-opaque: var(--ilook-bg-hover) !important;
+
   /* Codex 코드 하이라이트 */
   --color-codex-syntax-keyword: var(--ilook-syntax-keyword) !important;
   --color-codex-syntax-string: var(--ilook-syntax-string) !important;
@@ -301,6 +328,15 @@ html[data-ilook] [class*='text-[#8F8F8F]'] {
 /* 캔버스(글쓰기) 카드: dark:bg-[#2a2a2a]! 고정색. 글자는 --oai-wb-text-primary → 토큰이라 면만 바꾸면 된다 */
 html[data-ilook] [class*='bg-[#2a2a2a]'] {
   background-image: linear-gradient(var(--ilook-bg-surface), var(--ilook-bg-surface)) !important;
+}
+
+/* 새 코드 카드(.CodeSurface): 사이트는 바탕(--color-surface) 위에 반투명 겹침을 그려 머리글과 코드 영역을 한 면으로 만든다.
+   겹침 변수를 불투명 hover로 바꾼 데다 안쪽 pre를 bg-code로 칠해 두 톤으로 갈라졌다. 카드 전체를 코드 면 하나로 칠한다. */
+html[data-ilook] [class*='CodeSurface-'],
+html[data-ilook] [class*='CodeSurface-'] [class*='StickyActionBar-'],
+html[data-ilook] [class*='CodeBlock-'] [class*='StickyActionBar-'] {
+  background-color: var(--ilook-bg-code) !important;
+  background-image: none !important;
 }
 
 /* 코드 블록: 하이라이트 색이 .light/.dark 범위별 하드코딩 rgb라 토큰으로 바꾼다 */

@@ -189,7 +189,8 @@ export function derive(seeds) {
 
   // 글자는 bg-app 말고도 입력창(surface)·메뉴(elevated)·말풍선·코드 면 위에 놓인다.
   // 그중 대비가 가장 낮은 면을 기준으로 한 번 더 보장한다.
-  const surfaces = [bg, bgSurface, bgElevated, bgUserMsg, bgCode, bgInlineCode, bgHover, bgActive];
+  // accent-soft: ChatGPT 업그레이드 버튼·정보 칩처럼 포인트 면 위에도 링크 글자가 놓인다
+  const surfaces = [bg, bgSurface, bgElevated, bgUserMsg, bgCode, bgInlineCode, bgHover, bgActive, accentSoft];
   const onAllSurfaces = (fg, min) => {
     const worst = surfaces.reduce((a, b) => (contrastHex(fg, b) < contrastHex(fg, a) ? b : a));
     const fixed = ensureContrast(fg, worst, min, { direction: light ? 'darker' : 'lighter' });
