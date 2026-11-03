@@ -136,9 +136,47 @@ html[data-ilook] body {
   color: var(--ilook-text-primary) !important;
 }
 
+/* fizzy-lake 색 체계 (2026-11 실측): .cds-root·.cds-dark-scope·#static-composer 범위에 사이트 모드별 고정값
+   (예: --muted-as-secondary = rgb(0 0 0 / .6))을 선언한다. .text-muted-as-secondary가 이 값을 먼저 써서
+   어두운 테마에서 "고정됨", 날짜, 모델 노력 단계, 설정 캡션, Code 세션 제목이 검정으로 남았다. */
+html[data-ilook],
+html[data-ilook] .cds-root,
+html[data-ilook] .cds-dark-scope,
+html[data-ilook] [id^='static-composer'] {
+  --muted-as-secondary: var(--ilook-text-secondary) !important;
+  --cds-text-stays-secondary: var(--ilook-text-secondary) !important;
+  --control-ink: var(--ilook-text-primary) !important;
+  --cds-fizzy-lake-color-control-ink: var(--ilook-text-primary) !important;
+  --cds-fizzy-lake-color-solid-primary: var(--ilook-text-primary) !important;
+  --cds-fizzy-lake-color-solid-secondary: var(--ilook-text-secondary) !important;
+  --cds-fizzy-lake-color-secondary: var(--ilook-text-secondary) !important;
+  --cds-fizzy-lake-color-plain-secondary: var(--ilook-text-secondary) !important;
+  --cds-fizzy-lake-color-solid-muted: var(--ilook-text-muted) !important;
+  --cds-fizzy-lake-color-plain-muted: var(--ilook-text-muted) !important;
+  --cds-fizzy-lake-color-tertiary: var(--ilook-text-muted) !important;
+  --cds-fizzy-lake-color-placeholder: var(--ilook-text-muted) !important;
+  --cds-fizzy-lake-color-icon-only-disabled: var(--ilook-text-muted) !important;
+  --cds-fizzy-lake-color-composer-ring: var(--ilook-border-subtle) !important;
+  --cds-fizzy-lake-color-seam: var(--ilook-border-subtle) !important;
+  --cds-fizzy-lake-color-message-line: var(--ilook-border-subtle) !important;
+  --cds-fizzy-lake-color-banner-line: var(--ilook-border-subtle) !important;
+  --cds-fizzy-lake-color-selected-hover: var(--ilook-bg-active) !important;
+  --cds-fizzy-lake-color-card-hover: var(--ilook-bg-hover) !important;
+  --cds-fizzy-lake-color-sidebar: var(--ilook-bg-sidebar) !important;
+}
+
+/* 입력창 안내문: html:not([data-cds-theme]) #static-composer-input::placeholder가 고정 회색(#878787)이다 */
+html[data-ilook] #static-composer-input::placeholder {
+  color: var(--ilook-text-muted) !important;
+}
+
 /* 사이드바 구역: 사이트는 사이드바에도 본문과 같은 --cds-text-*를 쓰고, 배경은 surface-0과 surface-1을 섞는다.
    사이드바 전용 토큰(sidebar-*)이 정확히 그 배경 위에서 계산되므로 배경과 글자를 모두 바꿔 끼운다. */
-html[data-ilook] .dframe-sidebar {
+html[data-ilook] .dframe-sidebar,
+html[data-ilook] .dframe-sidebar-body {
+  color: var(--ilook-sidebar-text);
+  /* 좁은 창 서랍: 본문이 bg-[hsl(var(--df-surface-primary))]로 칠해진다 */
+  --df-surface-primary: var(--ilook-bg-sidebar-hsl) !important;   /* 사이트가 패널에 글자색을 주지 않아 body의 본문 글자색이 내려왔다 */
   --df-web-sidebar-bg: var(--ilook-bg-sidebar) !important;
   --df-sidebar-bg: var(--ilook-bg-sidebar) !important;
   --df-hover: var(--ilook-sidebar-hover) !important;
@@ -151,6 +189,20 @@ html[data-ilook] .dframe-sidebar {
   --cds-text-accent: var(--ilook-sidebar-accent) !important;
   --cds-shortcut-cap-ink: var(--ilook-sidebar-text-muted) !important;
   --cds-border: var(--ilook-sidebar-border) !important;
+  --muted-as-secondary: var(--ilook-sidebar-text-muted) !important;
+  --cds-text-stays-secondary: var(--ilook-sidebar-text-muted) !important;
+  --control-ink: var(--ilook-sidebar-text) !important;
+  --cds-fizzy-lake-color-control-ink: var(--ilook-sidebar-text) !important;
+  --cds-fizzy-lake-color-solid-primary: var(--ilook-sidebar-text) !important;
+  --cds-fizzy-lake-color-solid-secondary: var(--ilook-sidebar-text) !important;
+  --cds-fizzy-lake-color-secondary: var(--ilook-sidebar-text-muted) !important;
+  --cds-fizzy-lake-color-plain-secondary: var(--ilook-sidebar-text-muted) !important;
+  --cds-fizzy-lake-color-solid-muted: var(--ilook-sidebar-text-muted) !important;
+  --cds-fizzy-lake-color-plain-muted: var(--ilook-sidebar-text-muted) !important;
+  --cds-fizzy-lake-color-tertiary: var(--ilook-sidebar-text-muted) !important;
+  --cds-fizzy-lake-color-seam: var(--ilook-sidebar-border) !important;
+  --cds-fizzy-lake-color-selected-hover: var(--ilook-sidebar-active) !important;
+  --cds-fizzy-lake-color-card-hover: var(--ilook-sidebar-hover) !important;
 }
 
 /* 문서 패널 제목 등은 팔레트 끝값(text-gray-900/80, dark:text-gray-0/70)을 직접 써서 사이트 모드를 따라간다.
@@ -229,10 +281,6 @@ html[data-ilook] ::selection {
 
 html[data-ilook] :focus-visible {
   outline-color: var(--ilook-focus-ring) !important;
-}
-
-html[data-ilook] a {
-  color: var(--ilook-text-link);
 }
 
 html[data-ilook] pre,

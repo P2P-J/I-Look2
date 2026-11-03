@@ -7,6 +7,11 @@ test('사이트 감지', () => {
   assert.equal(detectSite('claude.ai', '/code/artifact/x'), 'claude-code');
   assert.equal(detectSite('abc.frame.claudeusercontent.com', '/_f/1'), 'claude');
   assert.equal(detectSite('chatgpt.com', '/'), 'chatgpt');
+  assert.equal(detectSite('chatgpt.com', '/c/abc'), 'chatgpt');
+  assert.equal(detectSite('chatgpt.com', '/gpts'), 'chatgpt');
+  assert.equal(detectSite('chatgpt.com', '/ko-KR/codex/'), null);
+  assert.equal(detectSite('chatgpt.com', '/en-US/pricing/'), null);
+  assert.equal(detectSite('chatgpt.com', '/ja/'), null);
   assert.equal(detectSite('example.com', '/'), null);
 });
 

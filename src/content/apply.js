@@ -14,7 +14,11 @@ function frameHostname() {
 }
 
 export function detectSite(hostname = frameHostname(), pathname = location.pathname) {
-  if (hostname === 'chatgpt.com' || hostname.endsWith('.chatgpt.com')) return 'chatgpt';
+  if (hostname === 'chatgpt.com' || hostname.endsWith('.chatgpt.com')) {
+    // /ko-KR/codex/, /en-US/pricing/ 같은 언어 코드 경로는 사진 배경을 쓰는 마케팅 페이지라 칠하지 않는다
+    if (/^\/[a-z]{2}(-[A-Za-z]{2,4})?(\/|$)/.test(pathname)) return null;
+    return 'chatgpt';
+  }
   if (hostname === 'claude.ai' || hostname.endsWith('.claude.ai')) return pathname.startsWith('/code') ? 'claude-code' : 'claude';
   // 문서(아티팩트) 본문은 claude.ai 안의 별도 도메인 iframe에 들어 있다
   if (hostname.endsWith('.claudeusercontent.com')) return 'claude';

@@ -160,6 +160,7 @@ html[data-ilook] .puik-root {
   --app-color-text-foreground: var(--ilook-text-primary) !important;
   --app-color-icon-primary: var(--ilook-text-primary) !important;
   --color-codex-icon: var(--ilook-text-primary) !important;
+  --color-codex-icon-active: var(--ilook-text-primary) !important;
   --color-text-button-outline: var(--ilook-text-primary) !important;   /* 모드별 고정 #0d0d0d/#fff */
   --color-text-mode-toggle-primary: var(--ilook-text-primary) !important;
   --color-text-secondary: var(--ilook-text-secondary) !important;
@@ -272,6 +273,17 @@ html[data-ilook] .puik-root {
   --app-color-text-secondary: var(--ilook-text-secondary) !important;
   --app-color-background-application-menu: var(--ilook-bg-elevated) !important;
   --color-background-control-opaque: var(--ilook-bg-hover) !important;
+  /* 설정 페이지 카드(인라인 style: var(--color-background-panel, …)) — 사이트 다크 팔레트 #000이 남아
+     밝은 테마에서 검은 카드 위 어두운 글자가 됐다. 분할 버튼·팁 배지·모드 토글·활동 컨트롤도 모드 고정값 */
+  --color-background-panel: var(--ilook-bg-surface) !important;
+  --segmented-control-background: var(--ilook-bg-hover) !important;
+  --app-color-background-tip-badge: var(--ilook-accent-soft) !important;
+  --app-color-text-tip-badge: var(--ilook-text-link) !important;
+  --color-text-mode-toggle-inactive: var(--ilook-text-muted) !important;
+  --color-text-mode-toggle-accent: var(--ilook-text-link) !important;
+  --color-background-activity-control-hover: var(--ilook-bg-active) !important;
+  --color-text-activity-control: var(--ilook-text-muted) !important;
+  --color-background-mode-toggle-track: var(--ilook-bg-active) !important;
 
   /* Codex 코드 하이라이트 */
   --color-codex-syntax-keyword: var(--ilook-syntax-keyword) !important;
@@ -283,8 +295,116 @@ html[data-ilook] .puik-root {
   --color-codex-syntax-comment: var(--ilook-syntax-comment) !important;
 }
 
+/* 고정 팔레트 섬: 요금제 창(.codex-dialog main.surface-*), 결제 창([data-checkout-theme], --checkout-*), 플랜 변경 상세.
+   이 범위들은 사이트 라이트/다크 고정값으로 옛 변수(--text-primary …)와 새 변수(--color-* …)를 통째로 다시 선언한다
+   (2026-11-03 실측). 대화상자 안의 surface-* 모듈과 결제 범위 전체를 토큰으로 바꾼다.
+   (surface-*를 전역으로 잡으면 입력창 하단 등 다른 모듈까지 바뀌어 회색 띠가 생긴다.) */
+html[data-ilook] .codex-dialog :is([class^='surface-'], [class*=' surface-']),
+html[data-ilook] [data-pricing-comparison] [data-pricing-plan],
+html[data-ilook] [data-checkout-theme],
+html[data-ilook] [data-checkout-theme] *,
+html[data-ilook] [class*='planChangeDetails-'] {
+  --checkout-text-primary: var(--ilook-text-primary) !important;
+  --checkout-text-secondary: var(--ilook-text-secondary) !important;
+  --checkout-text-tertiary: var(--ilook-text-muted) !important;
+  --checkout-icon-accent: var(--ilook-text-link) !important;
+  --checkout-bg-primary: var(--ilook-bg-surface) !important;
+  --checkout-page-background: var(--ilook-bg-app) !important;
+  --checkout-bg-secondary: var(--ilook-bg-hover) !important;
+  --checkout-text-status-warning: var(--ilook-warning) !important;
+  --checkout-text-status-success: var(--ilook-success) !important;
+  --checkout-bg-status-warning: var(--ilook-badge) !important;
+  --checkout-border-default: var(--ilook-border-subtle) !important;
+  --checkout-border-heavy: var(--ilook-border-strong) !important;
+  --checkout-button-background: var(--ilook-text-primary) !important;
+  --checkout-button-foreground: var(--ilook-bg-app) !important;
+  --checkout-button-hover: var(--ilook-text-secondary) !important;
+  --blue-100: var(--ilook-text-link) !important;
+  --blue-200: var(--ilook-text-link) !important;
+  --blue-400: var(--ilook-accent) !important;
+  --blue-500: var(--ilook-text-link) !important;
+  --text-primary: var(--ilook-text-primary) !important;
+  --text-secondary: var(--ilook-text-secondary) !important;
+  --text-tertiary: var(--ilook-text-muted) !important;
+  --text-accent: var(--ilook-text-link) !important;
+  --text-status-success: var(--ilook-success) !important;
+  --bg-primary: var(--ilook-bg-surface) !important;
+  --bg-secondary: var(--ilook-bg-hover) !important;
+  --bg-tertiary: var(--ilook-bg-active) !important;
+  --bg-elevated-primary: var(--ilook-bg-elevated) !important;
+  --bg-elevated-secondary: var(--ilook-bg-app) !important;
+  --main-surface-primary: var(--ilook-bg-app) !important;
+  --main-surface-tertiary: var(--ilook-bg-hover) !important;
+  --blue-50: var(--ilook-accent-soft) !important;
+  --accent-blue: var(--ilook-accent) !important;
+  --icon-accent: var(--ilook-text-link) !important;
+  --interactive-label-accent-accessible: var(--ilook-text-link) !important;
+  --color-background-primary-solid: var(--ilook-text-primary) !important;
+  --color-text-primary-solid: var(--ilook-bg-app) !important;
+  --color-background-info-solid: var(--ilook-accent) !important;
+  --color-background-info-solid-hover: var(--ilook-accent-hover) !important;
+  --color-text-info-solid: var(--ilook-text-on-accent) !important;
+  --bg-status-success: var(--ilook-diff-add) !important;
+  --main-surface-secondary: var(--ilook-bg-surface) !important;
+  --border-light: var(--ilook-border-subtle) !important;
+  --border-default: var(--ilook-border-subtle) !important;
+  --border-heavy: var(--ilook-border-strong) !important;
+  --interactive-bg-secondary-hover: var(--ilook-bg-hover) !important;
+  --interactive-bg-secondary-selected: var(--ilook-bg-active) !important;
+  --theme-blue-background: var(--ilook-accent-soft) !important;
+  --theme-blue-text-on-background: var(--ilook-text-link) !important;
+  --theme-purple-background: var(--ilook-accent-soft) !important;
+  --theme-purple-text: var(--ilook-text-link) !important;
+  --color-token-text-primary: var(--ilook-text-primary) !important;
+  --color-token-text-secondary: var(--ilook-text-secondary) !important;
+  --color-token-text-tertiary: var(--ilook-text-muted) !important;
+  --color-token-bg-primary: var(--ilook-bg-surface) !important;
+  --color-token-bg-tertiary: var(--ilook-bg-active) !important;
+  --color-token-border-default: var(--ilook-border-subtle) !important;
+  --color-token-border-heavy: var(--ilook-border-strong) !important;
+  --color-surface: var(--ilook-bg-surface) !important;
+  --color-surface-secondary: var(--ilook-bg-hover) !important;
+  --color-surface-tertiary: var(--ilook-bg-active) !important;
+  --color-text: var(--ilook-text-primary) !important;
+  --color-text-secondary: var(--ilook-text-secondary) !important;
+  --color-text-tertiary: var(--ilook-text-muted) !important;
+  --color-text-info: var(--ilook-text-link) !important;
+  --color-text-inverse: var(--ilook-bg-app) !important;
+  --color-border: var(--ilook-border-subtle) !important;
+  --color-border-heavy: var(--ilook-border-strong) !important;
+  --color-border-light: var(--ilook-border-subtle) !important;
+  --color-background-primary-ghost-hover: var(--ilook-bg-hover) !important;
+}
+
 /* 새 셸 사이드바는 본문과 같은 --color-* 토큰을 쓰므로 사이드바 전용 토큰으로 바꿔 끼운다 */
 html[data-ilook] .app-shell-left-panel {
+  /* 사이트가 패널에 글자색을 따로 주지 않아 body의 본문 글자색이 내려온다. 내비게이션 글자는
+     --color-background-primary-solid(반전 버튼 색)를 85% 섞어 만든다 (.Navigation-*). 둘 다 사이드바 토큰으로. */
+  color: var(--ilook-sidebar-text) !important;
+  --color-background-primary-solid: var(--ilook-sidebar-text) !important;
+  /* 버튼 변형별 글자·겹침색은 문서 최상단에서 본문 글자색으로 한 번 계산되므로 사이드바에서 다시 넣는다 (.Button-*[data-variant=ghost]) */
+  --color-text-primary-ghost: var(--ilook-sidebar-text) !important;
+  --color-text-primary-ghost-hover: var(--ilook-sidebar-text) !important;
+  --color-text-secondary-ghost: var(--ilook-sidebar-text) !important;
+  --color-text-secondary-ghost-hover: var(--ilook-sidebar-text) !important;
+  --color-text-button-outline: var(--ilook-sidebar-text) !important;
+  --color-background-primary-ghost-active: var(--ilook-sidebar-active) !important;
+  --color-background-primary-soft-alpha-hover: var(--ilook-sidebar-hover) !important;
+  --color-background-primary-soft-alpha-active: var(--ilook-sidebar-active) !important;
+  --color-background-secondary-soft-alpha-hover: var(--ilook-sidebar-hover) !important;
+  --color-background-secondary-soft-alpha-active: var(--ilook-sidebar-active) !important;
+  --color-background-primary-outline-hover: var(--ilook-sidebar-hover) !important;
+  --color-background-secondary-outline-hover: var(--ilook-sidebar-hover) !important;
+  --color-border-primary-outline-hover: var(--ilook-sidebar-border) !important;
+  --color-border-secondary-outline-hover: var(--ilook-sidebar-border) !important;
+  --color-border-button-outline: var(--ilook-sidebar-border) !important;
+  /* 사이드바 하단 업그레이드 버튼(.bg-surface-card): 본문 카드색이라 어두운 사이드바에서 글자가 묻혔다 */
+  --color-surface-card: var(--ilook-sidebar-hover) !important;
+  --sidebar-upgrade-rest-background: var(--ilook-sidebar-hover) !important;
+  /* 내비 아이콘(.text-codex-icon, 현재 페이지는 -active) */
+  --color-codex-icon: var(--ilook-sidebar-text) !important;
+  --color-codex-icon-active: var(--ilook-sidebar-text) !important;
+  --color-text-primary-solid: var(--ilook-bg-sidebar) !important;
   --color-surface: var(--ilook-bg-sidebar) !important;
   --color-surface-secondary: var(--ilook-bg-sidebar) !important;
   --app-color-background-surface: var(--ilook-bg-sidebar) !important;
@@ -296,6 +416,17 @@ html[data-ilook] .app-shell-left-panel {
   --color-background-primary-soft: var(--ilook-sidebar-active) !important;
   --color-background-secondary-soft: var(--ilook-sidebar-active) !important;
   --color-border: var(--ilook-sidebar-border) !important;
+}
+
+/* 요금제 카드의 "추천" 배지: 포인트색을 글자에 그대로 써서 연한 포인트 배경 위 대비가 2.6~2.9였다 */
+html[data-ilook] [class*='cardBadge-'] {
+  color: var(--ilook-text-link) !important;
+  background-color: var(--ilook-accent-soft) !important;
+}
+
+/* 요금제 추천 카드 강조: 바탕 → 사이트 파랑(#274b72 / #e5efff) 그라디언트를 바탕 → 연한 포인트로 */
+html[data-ilook] [class*='cardHighlight-'] {
+  background-image: linear-gradient(var(--ilook-bg-surface), var(--ilook-accent-soft)) !important;
 }
 
 /* 메뉴 항목은 .__menu-item에서 자체 변수를 선언한다 */

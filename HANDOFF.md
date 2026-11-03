@@ -59,6 +59,16 @@ Claude 문서 패널은 세 겹 iframe이다: `claude.ai/code/artifact/…` → 
 - 문서 편집기(`html[data-embedded]` / 독립형 `html[data-frame-uuid]`)는 `--bg/--fg/--mut/--surf/--line/--hov …` 자체 변수.
 - 코드 블록 `.code-block__code`는 `canvastext`·인라인 색이라 직접 덮고, 중첩 범위의 `color-scheme`도 테마에 맞춘다.
 
+### 2026-11-03 전체 재검토에서 추가로 확인한 것
+
+- ChatGPT: 옛 셸 전역 선언은 사라졌고, 옛 변수(`--text-primary` …)는 컴포넌트 범위에서만 다시 선언된다. 요금제 창(`.codex-dialog main.surface-*`), 결제(`[data-checkout-theme]`)는 사이트 라이트/다크 고정 팔레트를 통째로 다시 선언하는 "섬"이라 범위째 덮는다. `surface-*`를 전역으로 잡으면 입력창 하단에 회색 띠가 생기니 대화상자 안으로 한정한다.
+- ChatGPT: 언어 코드 경로(`/ko-KR/codex/`, `/en-US/pricing/`)는 사진 배경 마케팅 페이지라 `detectSite`가 제외한다.
+- ChatGPT·Claude 공통: 사이드바가 글자색을 따로 주지 않아 `body`의 본문 글자색이 내려온다. 사이드바 범위에 `color`를 직접 준다. 버튼 변형별 글자색(`--color-text-primary-ghost` 등), 내비 아이콘(`--color-codex-icon`)은 문서 최상단에서 한 번 계산되므로 사이드바에서 다시 넣는다.
+- Claude: 새 fizzy-lake 체계(`--muted-as-secondary`, `--cds-fizzy-lake-color-*`, `--control-ink`)가 `.cds-root`·`.cds-dark-scope`·`#static-composer`에 모드 고정값으로 선언된다. 연결 안 하면 어두운 테마에서 "고정됨", 날짜, 설정 캡션이 검정으로 남는다.
+- Claude: 어댑터의 전역 `a { color: 링크색 }`은 레이어 밖 규칙이라 사이트의 `@layer utilities` 클래스를 이겨 사이드바 메뉴 전체를 링크색으로 칠했다. 지웠다 (본문 링크는 사이트 변수로 링크색 유지).
+- 검증 테마에 **사이드바를 본문과 반대 밝기로 만든 커스텀 테마**(`bg #f5f5f5`, `sidebar #1a1a1a`)를 꼭 넣는다. 프리셋은 본문과 사이드바 밝기가 비슷해서 "사이드바에 본문 글자색이 새는" 버그가 안 보인다.
+- 남은 것: Claude 모델 메뉴 체크 표시(포인트색 아이콘)가 팝오버 위에서 2.2~2.5:1. 사이트가 라이트 모드인 ChatGPT 계정 조합은 이번에 확인하지 못했다.
+
 ## 검증 방법 (중요)
 
 로그아웃 화면은 로그인 앱과 **다른 번들**이라 검증 가치가 없다. Playwright가 띄운 브라우저는 로그인이 막힌다. 그래서:
